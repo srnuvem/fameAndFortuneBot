@@ -12,15 +12,14 @@ export default new Command({
         const embed = new EmbedBuilder()
             .setTitle(`${character.name}`)
             .setDescription(`
-        **Humanidade:** ${character.humanidade}     **PV:** ${character.PV} ❤️ 
+                **Humanidade:** ${character.humanidade}     **PV:** ${character.PV} ❤️ 
 
-        ✅⭕️⭕️⭕️⭕️ | **Força:** ${character.forca} 
-        ✅✅⭕️⭕️⭕️ | **Astucia:** ${character.astucia}  
-        ✅✅✅️⭕️⭕️ | **Manha:** ${character.manha}  
-        ✅✅✅✅️⭕️ | **Ardil:** ${character.ardil}
-        \u200B
-        **Creditos🪙:  ${character.creditos}€$**   **Perolas🔮:  ${character.perolas} CryPe**
-
+                ${formatAprendizados(character.aprendizados.forca)} | **Força:** ${character.forca} 
+                ${formatAprendizados(character.aprendizados.astucia)} | **Astucia:** ${character.astucia}  
+                ${formatAprendizados(character.aprendizados.manha)} | **Manha:** ${character.manha}  
+                ${formatAprendizados(character.aprendizados.ardil)} | **Ardil:** ${character.ardil}
+                \u200B
+                **Creditos🪙:  ${character.creditos}€$**   **Perolas🔮:  ${character.perolas} CryPe**
         `)
             .setColor(character.color as ColorResolvable)
             .setThumbnail(character.thumbURL)
@@ -78,8 +77,13 @@ export default new Command({
                 })
             ]
         })
+
+
         interaction.reply({ embeds: [embed], components: [rowAttributes, rowMod, rowButtons], ephemeral: true })
-    },
+        .then(repliedMessage => {
+            setTimeout(() => repliedMessage.delete(), 300000);
+        });
+},
 
     buttons: new Collection([
         ["attack-button", async (buttonInteraction) => {
@@ -112,22 +116,37 @@ function getCharacter(interaction: CommandInteraction) {
     return {
         user: interaction.user,
         name: "A NUVEM",
-        PV: "100",
-        forca: "20",
-        astucia: "19",
-        manha: "18",
-        ardil: "17",
-        humanidade: "16",
+        PV: 100,
+        forca: 20,
+        astucia: 19,
+        manha: 18,
+        ardil: 17,
+        humanidade: 16,
         aprendizados: {
-            forca: "5",
-            astucia: "4",
-            manha: "3",
-            ardil: "2"
+            forca: 4,
+            astucia: 3,
+            manha: 2,
+            ardil: 0
         },
-        creditos: "999999999",
-        perolas: "999",
+        creditos: 999999999,
+        perolas: 999,
         color: "Gold",
         thumbURL: "https://cdn.discordapp.com/attachments/1089306678668824628/1095522105501691914/photo_4990252059920017634_x.jpg"
 
     }
+}
+
+function formatAprendizados(aprendizados: number): string {
+    let formattedApprendizados = "";
+
+    for (let i = 0; i < 5; i++) {
+        if (aprendizados > 0) {
+            formattedApprendizados += "✅"
+        } else {
+            formattedApprendizados += "⭕️"
+
+        }
+        aprendizados--;
+    }
+    return formattedApprendizados;
 }
