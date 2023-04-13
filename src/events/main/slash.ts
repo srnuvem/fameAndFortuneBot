@@ -12,6 +12,10 @@ export default new Event({
 
         const options = interaction.options as CommandInteractionOptionResolver
 
-        command.run({ client, interaction, options })
+        try {
+            command.run({ client, interaction, options })
+        } catch (error) {
+            console.log(`❌ An error occurred: \n${error}`.red);
+        }
     },
 })
