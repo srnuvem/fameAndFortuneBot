@@ -89,7 +89,7 @@ export default new Command({
         // Esconde os componentes se a mensagem for efemera
         const components = ephemeral ? [rowAttributes, rowMod, rowButtons] : [];
 
-        interaction.reply({ embeds: [embed], components, ephemeral, fetchReply: true })
+        interaction.reply({ embeds: [embed], components, ephemeral})
             .then(repliedMessage => {
                 // Apaga a mensagem depois de 5 min
                 setTimeout(() => repliedMessage.delete(), 30000);
@@ -123,23 +123,22 @@ export default new Command({
             try {
                 const character = getCharacters().filter(function (character) { return character.userId === buttonInteraction.user.id; })[0];
                 const rolagem = rollD20();
-                const attValue = character?.selectedAtt ? character[character.selectedAtt] : ""
-                const modValue = character?.selectedMod ? character[character.selectedMod] : ""
+                const attValue = character?.selectedAtt ? character[character.selectedAtt] : 0;
+                const modValue = character?.selectedMod | 0;
+                const total = rolagem + modValue;
 
                 const embed = new EmbedBuilder()
-                    .setTitle(`${character?.name} atacou! ${character.selectedAtt}: ${attValue}`)
-                    .setDescription(`
+                .setTitle(`${character?.name} atacou! ${character.selectedAtt}: ${total}`)
+                .setDescription(`
                 ${character.selectedAtt}: ${attValue}
                 Modificador: ${modValue}
                 Rolagem: ${rolagem}
-                Ataque total: **${rolagem + modValue}**`)
-                    .setColor("White")
-                    .setThumbnail(character.thumbURL)
-
-                buttonInteraction.followUp({ embeds: [embed] })
-                buttonInteraction.update({
-                    components: []
-                })
+                Ataque total: **${total}**`)
+                .setColor("White")
+                .setThumbnail(character.thumbURL)
+                
+                await buttonInteraction.update({components: []});
+                await buttonInteraction.followUp({ embeds: [embed] })
             } catch (error) {
                 console.log(`An error occurred: ${error}`.red);
             }
@@ -149,9 +148,9 @@ export default new Command({
             try {
                 const character = getCharacters().filter(function (character) { return character.userId === buttonInteraction.user.id; })[0];
                 const rolagem = rollD20();
-                const attValue = character?.selectedAtt ? character[character.selectedAtt] : ""
-                const modValue = character?.selectedMod ? character[character.selectedMod] : ""
-
+                const attValue = character?.selectedAtt ? character[character.selectedAtt] : 0
+                const modValue = character?.selectedMod | 0;
+                
                 const result = calculateResult(rolagem, attValue, modValue);
 
                 const embed = new EmbedBuilder()
@@ -159,11 +158,12 @@ export default new Command({
                     .setDescription(`
                 ${character.selectedAtt}: ${attValue}
                 Modificador: ${character.selectedMod}
-                Dificuldade total: **${attValue + character.selectedMod}**`)
+                Dificuldade total: **${attValue + modValue}**`)
                     .setColor(getColor(result) as ColorResolvable)
                     .setThumbnail(character.thumbURL)
 
-                buttonInteraction.reply({ embeds: [embed] })
+                    await buttonInteraction.update({components: []});
+                    await buttonInteraction.followUp({ embeds: [embed] })
 
                 // Adicionar update de aprendizado em caso de falha
                 // Enviar comemoração de subida de nivel em caso de 5 aprendizados.
