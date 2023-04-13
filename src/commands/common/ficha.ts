@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandType, ButtonBuilder, ButtonInteraction, ButtonStyle, Collection, ColorResolvable, CommandInteraction, EmbedBuilder, Interaction, StringSelectMenuBuilder, User } from "discord.js";
+import { ActionRowBuilder, ApplicationCommandType, ButtonBuilder, ButtonInteraction, ButtonStyle, Collection, ColorResolvable, CommandInteraction, ComponentType, EmbedBuilder, Interaction, StringSelectMenuBuilder, User } from "discord.js";
 import { Command } from "../../structs/types/Command";
 import { Character } from "../../structs/types/Character";
 
@@ -12,22 +12,18 @@ export default new Command({
 
         const character = getCharacters().filter(function (character) { return character.userId === interaction.user.id; })[0];
 
-        // Define se a mensagem é efemera ou nao baseado no nome do canal
-        const channel: any = interaction.channel;
-        const ephemeral = !channel.name.includes('ficha')
-
         const embed = new EmbedBuilder()
             .setTitle(`${character?.name}`)
             .setDescription(`
-            **Humanidade:** ${character.humanidade}     **PV:** ${character.PV} ❤️ 
-            
-            ${formatAprendizados(character.aprendizados.forca)} | **Força:** ${character.forca} 
-            ${formatAprendizados(character.aprendizados.astucia)} | **Astucia:** ${character.astucia}  
-            ${formatAprendizados(character.aprendizados.manha)} | **Manha:** ${character.manha}  
-            ${formatAprendizados(character.aprendizados.ardil)} | **Ardil:** ${character.ardil}
-            \u200B
-            **Creditos🪙:  ${character.creditos}€$**   **Perolas🔮:  ${character.perolas} CryPe**
-            `)
+        **Humanidade:** ${character.humanidade}     **PV:** ${character.PV} ❤️ 
+        
+        ${formatAprendizados(character.aprendizados.forca)} | **Força:** ${character.forca} 
+        ${formatAprendizados(character.aprendizados.astucia)} | **Astucia:** ${character.astucia}  
+        ${formatAprendizados(character.aprendizados.manha)} | **Manha:** ${character.manha}  
+        ${formatAprendizados(character.aprendizados.ardil)} | **Ardil:** ${character.ardil}
+        \u200B
+        **Creditos🪙:  ${character.creditos}€$**   **Perolas🔮:  ${character.perolas} CryPe**
+        `)
             .setColor(character.color as ColorResolvable)
             .setThumbnail(character.thumbURL)
 
@@ -38,9 +34,9 @@ export default new Command({
                     placeholder: "Escolha o atributo para rolagem:",
                     options: [
                         { label: "Força", value: "forca", description: "Força, Constituição." },
-                        { label: "Astucia", value: "astucia", description: "Inteligencia, Percepção." },
+                        { label: "Astúcia", value: "astucia", description: "Inteligência, Percepção." },
                         { label: "Manha", value: "manha", description: "Destreza, Agilidade." },
-                        { label: "Ardil", value: "ardil", description: "Carisma, Labia." },
+                        { label: "Ardil", value: "ardil", description: "Carisma, Lábia." },
                         { label: "Humanidade", value: "humanidade", description: "Humanidade, Sanidade." },
                     ]
                 })
@@ -86,10 +82,17 @@ export default new Command({
             ]
         })
 
-        
-        interaction.reply({ embeds: [embed], components: [rowAttributes, rowMod, rowButtons], ephemeral })
+        // Define se a mensagem é efemera ou nao baseado no nome do canal
+        const channel: any = interaction.channel;
+        const ephemeral = !channel.name.includes('ficha')
+
+        // Esconde os componentes se a mensagem for efemera
+        const components = ephemeral ? [rowAttributes, rowMod, rowButtons] : [];
+
+        interaction.reply({ embeds: [embed], components, ephemeral, fetchReply: true })
             .then(repliedMessage => {
-                setTimeout(() => repliedMessage.delete(), 300000);
+                // Apaga a mensagem depois de 5 min
+                setTimeout(() => repliedMessage.delete(), 30000);
             })
     },
     selects: new Collection([
@@ -109,18 +112,34 @@ export default new Command({
                 const { user } = selectInteraction
                 const mod = selectInteraction.values[0];
                 selectInteraction.deferUpdate()
-                saveMod(selectInteraction.user.id, mod);
+                saveMod(selectInteraction.user.id, parseInt(mod));
             } catch (error) {
                 console.log(`An error occurred: ${error}`.red);
             }
         }]]),
-
     buttons: new Collection([
         ["attack-button", async (buttonInteraction) => {
             const { user } = buttonInteraction
             try {
                 const character = getCharacters().filter(function (character) { return character.userId === buttonInteraction.user.id; })[0];
-                buttonInteraction.reply({ content: `${user.username} Atacou! ${character.selectedAtt} com mod: ${character.selectedMod}` })
+                const rolagem = rollD20();
+                const attValue = character?.selectedAtt ? character[character.selectedAtt] : ""
+                const modValue = character?.selectedMod ? character[character.selectedMod] : ""
+
+                const embed = new EmbedBuilder()
+                    .setTitle(`${character?.name} atacou! ${character.selectedAtt}: ${attValue}`)
+                    .setDescription(`
+                ${character.selectedAtt}: ${attValue}
+                Modificador: ${modValue}
+                Rolagem: ${rolagem}
+                Ataque total: **${rolagem + modValue}**`)
+                    .setColor("White")
+                    .setThumbnail(character.thumbURL)
+
+                buttonInteraction.followUp({ embeds: [embed] })
+                buttonInteraction.update({
+                    components: []
+                })
             } catch (error) {
                 console.log(`An error occurred: ${error}`.red);
             }
@@ -129,7 +148,25 @@ export default new Command({
             const { user } = buttonInteraction
             try {
                 const character = getCharacters().filter(function (character) { return character.userId === buttonInteraction.user.id; })[0];
-                buttonInteraction.reply({ content: `${user.username} Checkou! ${character.selectedAtt} com mod: ${character.selectedMod}` })
+                const rolagem = rollD20();
+                const attValue = character?.selectedAtt ? character[character.selectedAtt] : ""
+                const modValue = character?.selectedMod ? character[character.selectedMod] : ""
+
+                const result = calculateResult(rolagem, attValue, modValue);
+
+                const embed = new EmbedBuilder()
+                    .setTitle(`${result} ${character?.name} rolou: ${rolagem} em ${character.selectedAtt}`)
+                    .setDescription(`
+                ${character.selectedAtt}: ${attValue}
+                Modificador: ${character.selectedMod}
+                Dificuldade total: **${attValue + character.selectedMod}**`)
+                    .setColor(getColor(result) as ColorResolvable)
+                    .setThumbnail(character.thumbURL)
+
+                buttonInteraction.reply({ embeds: [embed] })
+
+                // Adicionar update de aprendizado em caso de falha
+                // Enviar comemoração de subida de nivel em caso de 5 aprendizados.
             } catch (error) {
                 console.log(`An error occurred: ${error}`.red);
             }
@@ -137,33 +174,22 @@ export default new Command({
     ])
 
 })
-
 function saveAtt(userId: string, att: string) {
     // Change to update values in DB
     var character = characters.filter(function (character) { return character.userId === userId; })[0];;
     character.selectedAtt = att;
 
     characters.map(c => c.userId !== character.userId ? c : character);
-
-    console.log('characters -> ', getCharacters());
-    console.log(`att: ${att}`)
 }
 
-function saveMod(userId: string, mod: string) {
+function saveMod(userId: string, mod: number) {
     // Change to update values in DB
 
     var character = characters.filter(function (character) { return character.userId === userId; })[0];;
     character.selectedMod = mod;
 
-    console.log(character);
-
     characters.map(c => c.userId !== character.userId ? c : character);
-
-    console.log('characters -> ', getCharacters());
-    console.log(`mod: ${mod}`)
 }
-
-
 //Remove
 function createCharacters() {
     // Should get all characters from quickDB
@@ -185,13 +211,13 @@ function createCharacters() {
         creditos: 999999999,
         perolas: 999,
         color: "Gold",
-        thumbURL: "https://cdn.discordapp.com/attachments/1089306678668824628/1095522105501691914/photo_4990252059920017634_x.jpg"
+        thumbURL: "https://media.discordapp.net/attachments/1095822353193242785/1096156443058643045/photo_4990252059920017634_x.jpg"
 
     } as Character,
     {
         name: "Rubi",
         userId: "818864251044102144",
-        PV: 40	,
+        PV: 40,
         forca: 9,
         astucia: 5,
         manha: 6,
@@ -230,4 +256,45 @@ function formatAprendizados(aprendizados: number): string {
         aprendizados--;
     }
     return formattedApprendizados;
+}
+
+
+export function rollD20() {
+    let min = 1;
+    let max = 20;
+    let mathLogic = Math.floor(Math.random() * (max - min + 1)) + min;
+    return mathLogic
+}
+
+export function calculateResult(roll: number, attValue: number, modValue: number) {
+    if (roll === 1) {
+        return "CRITICO";
+    }
+    if (roll === 20) {
+        return "FALHA CRITICA";
+    }
+
+    return roll <= attValue + modValue ? "SUCESSO" : "FALHA"
+}
+
+export function getColor(result: string) {
+    var color;
+    switch (result) {
+        case 'SUCESSO':
+            color = 0x01cbf3;
+            break;
+        case 'CRITICO':
+            color = 0x00ff51;
+            break;
+        case 'FALHA':
+            color = 0xf30135;
+            break;
+        case 'FALHA CRITICA':
+            color = 0x000000;
+            break;
+        default:
+            color = 0xffffff;
+    }
+    return color;
+
 }

@@ -19,7 +19,7 @@ export interface Character {
     perolas: number,
     color: string,
     thumbURL: string,
-    selectedMod: string,
-    selectedAtt: string
+    selectedAtt: string,
+    selectedMod: number
 
 }
