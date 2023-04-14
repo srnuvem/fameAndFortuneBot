@@ -1,8 +1,8 @@
-import { ApplicationCommandType, Collection } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandType, Collection } from "discord.js";
 import { QuickDB } from "quick.db";
 import { buildFichaComponents, buildFichaCreationComponents, buildFichaCreationEmbed, buildFichaEmbed, buildFichaModal } from "../../helpers/fichaHelper";
 import { formatResult, rollD20 } from "../../helpers/formattersHelper";
-import { buildAtaqueEmbed, buildCheckEmbed, buildLvlUpEmbed, updateAprendizados } from "../../helpers/rolagemHelper";
+import { buildAtaqueEmbed, buildCheckEmbed, buildHumanityLostEmbed, buildLvlUpEmbed, updateAprendizados, updateHumanidade } from "../../helpers/rolagemHelper";
 import { Character } from "../../structs/types/Character";
 import { Command } from "../../structs/types/Command";
 
@@ -12,15 +12,25 @@ export default new Command({
     name: "dados",
     description: "Envia a ficha do personagem.",
     type: ApplicationCommandType.ChatInput,
-    async run({ interaction }) {
+    options: [
+        {
+            name: "usuario",
+            description: "Usuario",
+            type: ApplicationCommandOptionType.User,
+        }
+    ],
+    async run({ interaction, options }) {
         try {
-            const embed = await buildFichaEmbed(interaction.user.id)
+            const userId = options?.getUser("usuario")?.id;
+
+
+            const embed = await buildFichaEmbed(userId || interaction.user.id)
 
             // Define se a mensagem é efemera ou nao baseado no nome do canal
             const channel: any = interaction.channel;
-            const ephemeral = !channel.name.includes('ficha')
+            const ephemeral = !channel.name.includes('ficha');
 
-            const components = ephemeral ? await buildFichaComponents() : undefined
+            const components = ephemeral && !userId ? await buildFichaComponents() : undefined
 
             interaction.reply({ embeds: [embed], components, ephemeral }).then(repliedMessage => { setTimeout(() => repliedMessage.delete(), 300000); })
         } catch (error) {
@@ -80,17 +90,26 @@ export default new Command({
                 const checkEmbed = await buildCheckEmbed(result, character, rolagem, attValue, modValue);
 
                 let levelUP = false;
+                let humanityLoss = false;
                 if (result.includes("FALHA")) {
-                    levelUP = await updateAprendizados(buttonInteraction.user.id);
+                    if (character.selectedAtt === "humanidade") {
+                        humanityLoss = await updateHumanidade(buttonInteraction.user.id)
+                    } else {
+                        levelUP = await updateAprendizados(buttonInteraction.user.id);
+                    }
                 }
 
                 const fichaEmbed = await buildFichaEmbed(buttonInteraction.user.id);
-                await buttonInteraction.reply({ embeds: [fichaEmbed], components: [], ephemeral: true });
+                await buttonInteraction.update({ embeds: [fichaEmbed], components: [] });
 
                 await buttonInteraction.followUp({ embeds: [checkEmbed] })
 
                 if (levelUP) {
                     await buttonInteraction.followUp({ embeds: [await buildLvlUpEmbed(character)] })
+                }
+
+                if (humanityLoss) {
+                    await buttonInteraction.followUp({ embeds: [await buildHumanityLostEmbed(character)] })
                 }
 
 

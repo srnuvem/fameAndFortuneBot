@@ -176,33 +176,6 @@ export async function buildFichaModal(userId: string) {
         ]
     })
 
-    const color = new ActionRowBuilder<TextInputBuilder>({
-        components: [
-            new TextInputBuilder({
-                custom_id: 'form-ficha-color-input',
-                label: "Cor Hex",
-                value: character?.color ? character?.color.toString() : undefined,
-                placeholder: "Qual a cor favorita do seu personagem em Hexadecimal 0x000000 🎨",
-                style: TextInputStyle.Short,
-                max_length: 8,
-                min_length: 8
-
-            }),
-        ]
-    })
-
-    const thumbURL = new ActionRowBuilder<TextInputBuilder>({
-        components: [
-            new TextInputBuilder({
-                custom_id: 'form-ficha-thumburl-input',
-                label: "Foto",
-                value: character?.thumbURL ? character?.thumbURL.toString() : undefined,
-                placeholder: "Cole o link da imagem da sua personagem 🖼️",
-                style: TextInputStyle.Short,
-            }),
-        ]
-    })
-
     return new ModalBuilder({
         custom_id: 'form-ficha', title: "Crie sua personagem", components: [name, forca, astucia, manha, ardil]
     });

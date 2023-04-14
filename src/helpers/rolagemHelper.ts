@@ -52,6 +52,14 @@ export async function updateAprendizados(userId: string) {
 
     return levelUP;
 }
+export async function updateHumanidade(userId: string) {
+    let character: Character = await db.get(userId) as Character;
+
+    character[character?.selectedAtt] -= 1;
+    await db.set(userId, character)
+
+    return true;
+}
 
 
 export async function buildLvlUpEmbed(character: Character) {
@@ -62,4 +70,14 @@ export async function buildLvlUpEmbed(character: Character) {
             Você ganhou mais 1 ponto em ${formatAtt(character?.selectedAtt)}`)
         .setThumbnail(character?.thumbURL)
         .setFooter({ text: "Parabéns! 🎉" })
+}
+
+export async function buildHumanityLostEmbed(character: Character) {
+
+    return new EmbedBuilder()
+        .setTitle(`${character?.name} perdeu 1 ponto em Humanidade  💀`)
+        .setDescription(`Os esforços de ${character?.name} estão cobrando um preço alto! 
+            Você perdeu 1 ponto de Humanidade`)
+        .setThumbnail(character?.thumbURL)
+        .setFooter({ text: "Cuidado! 💀" })
 }
