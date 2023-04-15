@@ -67,7 +67,7 @@ export default new Command({
                         },
                         {
                             id: modalInteraction.user.id,
-                            allow: "ViewChannel"
+                            allow: ["ViewChannel", "SendMessages","ManageMessages"]
                         }
                     ]
                 }) as TextChannel;
