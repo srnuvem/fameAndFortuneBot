@@ -29,7 +29,7 @@ export default new Command({
             const categoryId = channel?.parent?.id;
 
             const userId = options?.getUser("usuario")?.id;
-            const characterId = categoryId + "-" + (userId || interaction.user.id)
+            const characterId = "character/"+categoryId + "-" + (userId || interaction.user.id)
 
             const embed = await buildFichaEmbed(characterId)
 
@@ -51,7 +51,7 @@ export default new Command({
                 const channel = selectInteraction.channel as TextChannel;
                 const categoryId = channel?.parent?.id;
                 const userId = selectInteraction.user.id;
-                const characterId = categoryId + "-" + userId;
+                const characterId = "character/"+categoryId + "-" + userId;
 
                 const character: Character = await db.get(characterId) as Character;
                 character.selectedAtt = attribute;
@@ -69,7 +69,7 @@ export default new Command({
                 const channel = selectInteraction.channel as TextChannel;
                 const categoryId = channel?.parent?.id;
                 const userId = selectInteraction.user.id;
-                const characterId = categoryId + "-" + userId;
+                const characterId = "character/"+categoryId + "-" + userId;
 
                 const character: Character = await db.get(characterId) as Character;
                 character.selectedMod = parseInt(mod);
@@ -84,7 +84,7 @@ export default new Command({
                 const channel = buttonInteraction.channel as TextChannel;
                 const categoryId = channel?.parent?.id;
                 const userId = buttonInteraction.user.id;
-                const characterId = categoryId + "-" + userId;
+                const characterId = "character/"+categoryId + "-" + userId;
 
                 const embed = await buildAtaqueEmbed(characterId);
                 const fichaEmbed = await buildFichaEmbed(characterId);
@@ -100,7 +100,7 @@ export default new Command({
                 const channel = buttonInteraction.channel as TextChannel;
                 const categoryId = channel?.parent?.id;
                 const userId = buttonInteraction.user.id;
-                const characterId = categoryId + "-" + userId;
+                const characterId = "character/"+categoryId + "-" + userId;
 
                 let character: Character = await db.get(characterId) as Character;
 
@@ -147,9 +147,9 @@ export default new Command({
                 const channel = buttonInteraction.channel as TextChannel;
                 const categoryId = channel.parent?.id;
 
-                const characterId = categoryId + "-" + userId;
+                const characterId = "character/"+categoryId + "-" + userId;
 
-                await db.set("editCharacter-" + userId, characterId);
+                await db.set("editCharacter/" + userId, characterId);
                 buttonInteraction.showModal(await buildFichaModal(characterId))
             } catch (error) {
                 console.log(`An error occurred: ${error}`.red);

@@ -3,6 +3,8 @@ export interface Character {
     name: string,
     userId: string,
     characterId: string,
+    channelId: string,
+    guildId: string,
     PV: number,
     maxPV: number,
     forca: number,
@@ -28,6 +30,8 @@ export class CharacterClass implements Character {
     name: string = '';
     userId: string = '';
     characterId: string = '';
+    channelId: string = '';
+    guildId: string = '';
     PV: number = 0;
     maxPV: number = 0;
     forca: number = 0;

@@ -25,10 +25,10 @@ export default new Command({
             const categoryId = channelId.parent?.id;
 
             const userId = options.getUser("usuario", true).id;
-            const characterId = categoryId + "-" + userId;
+            const characterId = "character/"+categoryId + "-" + userId;
 
             const modal = await buildDmEditModal(characterId)
-            await db.set("editCharacter-" + userId, characterId)
+            await db.set("editCharacter/" + userId, characterId)
 
             interaction.showModal(modal);
 
@@ -40,7 +40,7 @@ export default new Command({
     modals: new Collection([["form-dm-edit", async (modalInteraction) => {
         try {
             const { fields } = modalInteraction;
-            const editCharacter = await db.get("editCharacter-" + modalInteraction.user.id);
+            const editCharacter = await db.get("editCharacter/" + modalInteraction.user.id);
 
             let character: Character = await db.get(editCharacter) as Character;
 

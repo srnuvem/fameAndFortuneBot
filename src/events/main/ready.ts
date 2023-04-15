@@ -1,5 +1,8 @@
+import { MessageCreateOptions, TextChannel } from "discord.js";
 import { QuickDB } from "quick.db";
 import { client } from "../..";
+import { buildFichaEmbed } from "../../helpers/fichaHelper";
+import { Character } from "../../structs/types/Character";
 import { Event } from "../../structs/types/Event";
 const db = new QuickDB();
 
@@ -15,13 +18,23 @@ export default new Event({
         console.log(`Buttons loaded: ${buttons.size}`.cyan);
         console.log(`Select Menus loaded: ${selects.size}`.cyan);
         console.log(`Modals loaded: ${modals.size}`.cyan);
-        await db.set("running", "Yes");
+        db.set("running", "Yes");
         db.get("running").then(value => console.log(`QuickDB running: ${value}`.cyan))
 
-        // run forever
-        // get all fichas in db
-        // for each ficha, create a channel if don't exist
-        // for each ficha send the ficha message every 30 seconds
-        // for each ficha delete the ficha message after 30 seconds
+
+        setInterval(async () => {
+            const entries = await db.all();
+            const characterEntries = entries.filter(entry => entry.id.includes('character'));
+            characterEntries.forEach(async char => {
+                const character = char.value as Character;
+                const guild = client.guilds.cache.get(character.guildId);
+                let channel = guild?.channels.cache.find(c => c.id === character.channelId) as TextChannel;
+                const embed = await buildFichaEmbed(character.characterId);
+
+                channel.send({ embeds: [embed], silent: true } as MessageCreateOptions).then(sentMessage => {
+                    setTimeout(() => sentMessage.delete(), 29000);
+                })
+            })
+        }, 30000)
     },
 })
