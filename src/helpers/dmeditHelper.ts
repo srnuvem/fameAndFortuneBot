@@ -4,8 +4,8 @@ import { Character } from "../structs/types/Character";
 
 const db = new QuickDB();
 
-export async function buildDmEditModal(userId: string) {
-    const character: Character = await db.get(userId) as Character;
+export async function buildDmEditModal(characterId: string) {
+    const character: Character = await db.get(characterId) as Character;
     const pv = new ActionRowBuilder<TextInputBuilder>({
         components: [
             new TextInputBuilder({
@@ -36,8 +36,8 @@ export async function buildDmEditModal(userId: string) {
         components: [
             new TextInputBuilder({
                 custom_id: 'form-ficha-perolas-input',
-                label: "Foto",
-                value: character?.perolas ? character?.perolas.toString() : undefined,
+                label: "Perolas",
+                value: character?.perolas ? character.perolas.toString() : undefined,
                 placeholder: "Altere as perolas aqui 🔮",
                 style: TextInputStyle.Short,
                 required: false

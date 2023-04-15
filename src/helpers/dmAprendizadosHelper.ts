@@ -4,8 +4,8 @@ import { Character } from "../structs/types/Character";
 
 const db = new QuickDB();
 
-export async function buildaprendizadoModal(userId: string) {
-    const character: Character = await db.get(userId) as Character;
+export async function buildaprendizadoModal(characterId: string) {
+    const character: Character = await db.get(characterId) as Character;
 
     const humanidade = new ActionRowBuilder<TextInputBuilder>({
         components: [

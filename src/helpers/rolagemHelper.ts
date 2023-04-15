@@ -4,8 +4,8 @@ import { Character } from "../structs/types/Character";
 import { formatAtt, getColor, rollD20 } from "./formattersHelper";
 const db = new QuickDB();
 
-export async function buildAtaqueEmbed(userId: string) {
-    const character: Character = await db.get(userId) as Character;
+export async function buildAtaqueEmbed(characterId: string) {
+    const character: Character = await db.get(characterId) as Character;
 
     const rolagem = rollD20();
     const attValue = character?.selectedAtt ? character[character?.selectedAtt] : 0;
@@ -38,8 +38,8 @@ export async function buildCheckEmbed(result: string, character: Character, rola
         .setFooter({ text: result.includes("FALHA") ? `Mas você aprendeu com isso. +1 de aprendizado em ${formatAtt(character?.selectedAtt)} 🎉` : "Sucesso! 🎉" })
 }
 
-export async function updateAprendizados(userId: string) {
-    let character: Character = await db.get(userId) as Character;
+export async function updateAprendizados(characterId: string) {
+    let character: Character = await db.get(characterId) as Character;
 
     const levelUP = character?.aprendizados[character?.selectedAtt] === 4;
     if (levelUP) {
@@ -48,15 +48,15 @@ export async function updateAprendizados(userId: string) {
     } else {
         character.aprendizados[character?.selectedAtt] += 1;
     }
-    await db.set(userId, character)
+    await db.set(characterId, character)
 
     return levelUP;
 }
-export async function updateHumanidade(userId: string) {
-    let character: Character = await db.get(userId) as Character;
+export async function updateHumanidade(characterId: string) {
+    let character: Character = await db.get(characterId) as Character;
 
     character[character?.selectedAtt] -= 1;
-    await db.set(userId, character)
+    await db.set(characterId, character)
 
     return true;
 }

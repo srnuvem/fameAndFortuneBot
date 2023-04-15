@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ApplicationCommandType, Collection } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandType, Collection, TextChannel } from "discord.js";
 import { QuickDB } from "quick.db";
 import { buildDmEditModal } from "../../helpers/dmeditHelper";
 import { buildFichaEmbed } from "../../helpers/fichaHelper";
@@ -21,10 +21,14 @@ export default new Command({
     ],
     async run({ interaction, options }) {
         try {
-            const userId = options.getUser("usuario", true).id;
+            const channelId = interaction.channel as TextChannel;
+            const categoryId = channelId.parent?.id;
 
-            const modal = await buildDmEditModal(userId)
-            await db.set("dmEditUser", userId)
+            const userId = options.getUser("usuario", true).id;
+            const characterId = categoryId + "-" + userId;
+
+            const modal = await buildDmEditModal(characterId)
+            await db.set("editCharacter-" + userId, characterId)
 
             interaction.showModal(modal);
 
@@ -36,9 +40,9 @@ export default new Command({
     modals: new Collection([["form-dm-edit", async (modalInteraction) => {
         try {
             const { fields } = modalInteraction;
-            const editUser = await db.get("dmEditUser");
+            const editCharacter = await db.get("editCharacter-" + modalInteraction.user.id);
 
-            let character: Character = await db.get(editUser) as Character;
+            let character: Character = await db.get(editCharacter) as Character;
 
             character.PV = parseInt(fields.getTextInputValue("form-ficha-pv-input"))
             character.creditos = parseInt(fields.getTextInputValue("form-ficha-creditos-input"));
@@ -46,9 +50,9 @@ export default new Command({
             character.color = fields.getTextInputValue("form-ficha-color-input");
             character.thumbURL = fields.getTextInputValue("form-ficha-thumburl-input");
 
-            await db.set(editUser, character)
+            await db.set(editCharacter, character)
 
-            const embed = await buildFichaEmbed(editUser);
+            const embed = await buildFichaEmbed(editCharacter);
             modalInteraction.reply({ embeds: [embed] })
 
         } catch (error) {

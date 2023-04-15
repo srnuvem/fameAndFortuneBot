@@ -6,8 +6,8 @@ import { formatAprendizados, getHealthEmoji } from "./formattersHelper";
 const db = new QuickDB();
 
 
-export async function buildFichaEmbed(userId: string) {
-    const character: Character = await db.get(userId) as Character;
+export async function buildFichaEmbed(characterId: string) {
+    const character: Character = await db.get(characterId) as Character;
 
     return new EmbedBuilder()
         .setTitle(`${character?.name}`)
@@ -105,8 +105,8 @@ export function buildFichaComponents() {
 }
 
 
-export async function buildFichaModal(userId: string) {
-    const character: Character = await db.get(userId) as Character;
+export async function buildFichaModal(characterId: string) {
+    const character: Character = await db.get(characterId) as Character;
 
     const name = new ActionRowBuilder<TextInputBuilder>({
         components: [

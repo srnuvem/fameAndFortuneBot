@@ -6,7 +6,7 @@ const db = new QuickDB();
 export default new Event({
     name: "ready",
     once: true,
-    run() {
+    async run() {
 
         const { commands, buttons, selects, modals } = client;
 
@@ -15,6 +15,13 @@ export default new Event({
         console.log(`Buttons loaded: ${buttons.size}`.cyan);
         console.log(`Select Menus loaded: ${selects.size}`.cyan);
         console.log(`Modals loaded: ${modals.size}`.cyan);
+        await db.set("running", "Yes");
         db.get("running").then(value => console.log(`QuickDB running: ${value}`.cyan))
+
+        // run forever
+        // get all fichas in db
+        // for each ficha, create a channel if don't exist
+        // for each ficha send the ficha message every 30 seconds
+        // for each ficha delete the ficha message after 30 seconds
     },
 })

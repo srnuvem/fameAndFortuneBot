@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ApplicationCommandType, Collection } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandType, Collection, TextChannel } from "discord.js";
 import { QuickDB } from "quick.db";
 import { buildaprendizadoModal } from "../../helpers/dmAprendizadosHelper";
 import { buildFichaEmbed } from "../../helpers/fichaHelper";
@@ -21,10 +21,15 @@ export default new Command({
     ],
     async run({ interaction, options }) {
         try {
-            const userId = options.getUser("usuario", true).id;
 
-            const modal = await buildaprendizadoModal(userId)
-            await db.set("dmEditUser", userId)
+            const channel = interaction.channel as TextChannel;
+            const categoryId = channel?.parent?.id;
+
+            const userId = options.getUser("usuario", true).id;
+            const characterId = categoryId + "-" + userId;
+
+            const modal = await buildaprendizadoModal(characterId);
+            await db.set("editCharacter-" + userId, characterId);
 
             interaction.showModal(modal);
 
@@ -36,9 +41,9 @@ export default new Command({
     modals: new Collection([["form-edit-aprendizados", async (modalInteraction) => {
         try {
             const { fields } = modalInteraction;
-            const editUser = await db.get("dmEditUser");
+            const editCharacter = await db.get("editCharacter-" + modalInteraction.user.id);
 
-            let character: Character = await db.get(editUser) as Character;
+            let character: Character = await db.get(editCharacter) as Character;
 
             character.aprendizados.forca = parseInt(fields.getTextInputValue("form-aprendizado-forca-input"))
             character.aprendizados.astucia = parseInt(fields.getTextInputValue("form-aprendizado-astucia-input"));
@@ -46,9 +51,10 @@ export default new Command({
             character.aprendizados.ardil = parseInt(fields.getTextInputValue("form-aprendizado-ardil-input"));
             character.humanidade = parseInt(fields.getTextInputValue("form-aprendizado-humanidade-input"));
 
-            await db.set(editUser, character)
 
-            const embed = await buildFichaEmbed(editUser);
+            await db.set(editCharacter, character)
+
+            const embed = await buildFichaEmbed(editCharacter);
             modalInteraction.reply({ embeds: [embed] })
 
         } catch (error) {

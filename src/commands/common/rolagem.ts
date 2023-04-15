@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ApplicationCommandType, Collection } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandType, Collection, TextChannel } from "discord.js";
 import { QuickDB } from "quick.db";
 import { buildFichaComponents, buildFichaCreationComponents, buildFichaCreationEmbed, buildFichaEmbed, buildFichaModal } from "../../helpers/fichaHelper";
 import { formatResult, rollD20 } from "../../helpers/formattersHelper";
@@ -19,16 +19,19 @@ export default new Command({
             type: ApplicationCommandOptionType.User,
         }
     ],
-    async run({ interaction, options }) {
+    async run({ interaction, options, client }) {
         try {
-            const userId = options?.getUser("usuario")?.id;
-
-
-            const embed = await buildFichaEmbed(userId || interaction.user.id)
+            if (!interaction.channel) return;
 
             // Define se a mensagem é efemera ou nao baseado no nome do canal
-            const channel: any = interaction.channel;
+            const channel = interaction.channel as TextChannel;
             const ephemeral = !channel.name.includes('ficha');
+            const categoryId = channel?.parent?.id;
+
+            const userId = options?.getUser("usuario")?.id;
+            const characterId = categoryId + "-" + (userId || interaction.user.id)
+
+            const embed = await buildFichaEmbed(characterId)
 
             const components = ephemeral && !userId ? await buildFichaComponents() : undefined
 
@@ -45,9 +48,14 @@ export default new Command({
             try {
                 const attribute = selectInteraction.values[0];
                 selectInteraction.deferUpdate()
-                const character: Character = await db.get(selectInteraction.user.id) as Character;
+                const channel = selectInteraction.channel as TextChannel;
+                const categoryId = channel?.parent?.id;
+                const userId = selectInteraction.user.id;
+                const characterId = categoryId + "-" + userId;
+
+                const character: Character = await db.get(characterId) as Character;
                 character.selectedAtt = attribute;
-                await db.set(selectInteraction.user.id, character)
+                await db.set(characterId, character)
             } catch (error) {
                 console.log(`An error occurred: ${error}`.red);
             }
@@ -58,9 +66,14 @@ export default new Command({
                 const { user } = selectInteraction
                 const mod = selectInteraction.values[0];
                 selectInteraction.deferUpdate()
-                const character: Character = await db.get(selectInteraction.user.id) as Character;
+                const channel = selectInteraction.channel as TextChannel;
+                const categoryId = channel?.parent?.id;
+                const userId = selectInteraction.user.id;
+                const characterId = categoryId + "-" + userId;
+
+                const character: Character = await db.get(characterId) as Character;
                 character.selectedMod = parseInt(mod);
-                await db.set(selectInteraction.user.id, character)
+                await db.set(characterId, character)
             } catch (error) {
                 console.log(`An error occurred: ${error}`.red);
             }
@@ -68,8 +81,13 @@ export default new Command({
     buttons: new Collection([
         ["attack-button", async (buttonInteraction) => {
             try {
-                const embed = await buildAtaqueEmbed(buttonInteraction.user.id);
-                const fichaEmbed = await buildFichaEmbed(buttonInteraction.user.id);
+                const channel = buttonInteraction.channel as TextChannel;
+                const categoryId = channel?.parent?.id;
+                const userId = buttonInteraction.user.id;
+                const characterId = categoryId + "-" + userId;
+
+                const embed = await buildAtaqueEmbed(characterId);
+                const fichaEmbed = await buildFichaEmbed(characterId);
 
                 await buttonInteraction.update({ embeds: [fichaEmbed], components: [] });
                 await buttonInteraction.followUp({ embeds: [embed] })
@@ -79,7 +97,12 @@ export default new Command({
         }],
         ["check-button", async (buttonInteraction) => {
             try {
-                let character: Character = await db.get(buttonInteraction.user.id) as Character;
+                const channel = buttonInteraction.channel as TextChannel;
+                const categoryId = channel?.parent?.id;
+                const userId = buttonInteraction.user.id;
+                const characterId = categoryId + "-" + userId;
+
+                let character: Character = await db.get(characterId) as Character;
 
                 const rolagem = rollD20();
                 const attValue = character?.selectedAtt ? character[character?.selectedAtt] : 0
@@ -93,13 +116,13 @@ export default new Command({
                 let humanityLoss = false;
                 if (result.includes("FALHA")) {
                     if (character.selectedAtt === "humanidade") {
-                        humanityLoss = await updateHumanidade(buttonInteraction.user.id)
+                        humanityLoss = await updateHumanidade(characterId)
                     } else {
-                        levelUP = await updateAprendizados(buttonInteraction.user.id);
+                        levelUP = await updateAprendizados(characterId);
                     }
                 }
 
-                const fichaEmbed = await buildFichaEmbed(buttonInteraction.user.id);
+                const fichaEmbed = await buildFichaEmbed(characterId);
                 await buttonInteraction.update({ embeds: [fichaEmbed], components: [] });
 
                 await buttonInteraction.followUp({ embeds: [checkEmbed] })
@@ -119,7 +142,15 @@ export default new Command({
             }
         }], ["editar-ficha", async (buttonInteraction) => {
             try {
-                buttonInteraction.showModal(await buildFichaModal(buttonInteraction.user.id))
+
+                const userId = buttonInteraction.user.id;
+                const channel = buttonInteraction.channel as TextChannel;
+                const categoryId = channel.parent?.id;
+
+                const characterId = categoryId + "-" + userId;
+
+                await db.set("editCharacter-" + userId, characterId);
+                buttonInteraction.showModal(await buildFichaModal(characterId))
             } catch (error) {
                 console.log(`An error occurred: ${error}`.red);
             }
