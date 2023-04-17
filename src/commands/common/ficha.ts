@@ -1,102 +1,157 @@
-import { ApplicationCommandType, CategoryChannel, ChannelType, Collection, MessageCreateOptions, MessagePayload, TextChannel, spoiler } from "discord.js";
-import { QuickDB } from "quick.db";
-import { buildFichaEmbed, buildFichaModal } from "../../helpers/fichaHelper";
-import { Character, CharacterClass } from "../../structs/types/Character";
+import { ApplicationCommandOptionType, ApplicationCommandType, Collection, TextChannel } from "discord.js";
+import { getCharacter, setEditCharacterId, updateCharacter } from "../../helpers/dbService";
+import { buildFichaEditPt1Modal } from "../../helpers/fichaEditPt1Helper";
+import { buildAtaqueEmbed, buildCheckEmbed, buildFichaComponents, buildFichaCreationComponents, buildFichaCreationEmbed, buildFichaEmbed, buildHumanityLostEmbed, buildLvlUpEmbed, updateAprendizados, updateHumanidade } from "../../helpers/fichaHelper";
+import { formatResult, rollD20 } from "../../helpers/formatters";
+import { Character } from "../../structs/types/Character";
 import { Command } from "../../structs/types/Command";
-
-const db = new QuickDB();
 
 export default new Command({
     name: "ficha",
-    description: "Envia o formulario de criação e edição de ficha da personagem",
+    description: "Envia a ficha do personagem.",
     type: ApplicationCommandType.ChatInput,
-    async run({ interaction }) {
+    options: [
+        {
+            name: "usuario",
+            description: "Usuario",
+            type: ApplicationCommandOptionType.User,
+        }
+    ],
+    async run({ interaction, options, client }) {
         try {
+            if (!interaction.channel) return;
 
+            // Define se a mensagem é efemera ou nao baseado no nome do canal
             const channel = interaction.channel as TextChannel;
+            const ephemeral = !channel.name.includes('ficha');
             const categoryId = channel?.parent?.id;
-            const userId = interaction.user.id;
-            const characterId = "character/"+categoryId + "-" + userId;
 
-            await db.set("editCharacter/" + userId, characterId);
+            const userId = options?.getUser("usuario")?.id;
+            const characterId = "character/" + categoryId + "-" + (userId || interaction.user.id)
 
-            const modal = await buildFichaModal(characterId)
-            interaction.showModal(modal);
+            const embed = await buildFichaEmbed(characterId)
 
+            const components = ephemeral && !userId ? await buildFichaComponents() : undefined
+
+            interaction.reply({ embeds: [embed], components, ephemeral }).then(repliedMessage => { setTimeout(() => repliedMessage.delete(), 300000); })
         } catch (error) {
-            console.log(`Um erro ocorreu: ${error}`.red);
+            console.log(`Ficha Não encontrada: ${error}`.red);
+            const embed = await buildFichaCreationEmbed();
+            const components = await buildFichaCreationComponents();
+            await interaction.reply({ embeds: [embed], components, ephemeral: true })
         }
     },
-    modals: new Collection([["form-ficha", async (modalInteraction) => {
-        try {
-            const { fields } = modalInteraction;
+    selects: new Collection([
+        ["attribute-selector", async (selectInteraction) => {
+            try {
+                const attribute = selectInteraction.values[0];
+                selectInteraction.deferUpdate()
+                const channel = selectInteraction.channel as TextChannel;
+                const categoryId = channel?.parent?.id;
+                const userId = selectInteraction.user.id;
+                const characterId = "character/" + categoryId + "-" + userId;
 
-            const characterId: string = await db.get("editCharacter/" + modalInteraction.user.id) as string;
-            let character: Character = await db.get(characterId) as Character;
-            const categoryId = characterId.substring(characterId.indexOf("/")+1, characterId.indexOf("-"));
-
-            const guild = modalInteraction.guild;
-            const category = guild?.channels.cache.get(categoryId) as CategoryChannel;
-            const channelName = formatChannelName(fields.getTextInputValue("form-ficha-name-input"));
-            let channel = guild?.channels.cache.find(c => c.name === channelName) as TextChannel;
-
-            const newCharacter = !character;
-            if (newCharacter) character = new CharacterClass();
-
-            character.characterId = characterId;
-
-            character.userId = modalInteraction.user.id;
-            character.name = fields.getTextInputValue("form-ficha-name-input");
-
-            character.forca = parseInt(fields.getTextInputValue("form-ficha-forca-input"));
-            character.astucia = parseInt(fields.getTextInputValue("form-ficha-astucia-input"));
-            character.manha = parseInt(fields.getTextInputValue("form-ficha-manha-input"));
-            character.ardil = parseInt(fields.getTextInputValue("form-ficha-ardil-input"));
-            character.maxPV = character?.forca * 5;
-            character.PV = character?.maxPV;
-
-            if (newCharacter && !channel) {
-                channel = await guild?.channels.create({
-                    name: channelName,
-                    type: ChannelType.GuildText,
-                    parent: category,
-                    permissionOverwrites: [
-                        {
-                            id: guild.roles.everyone,
-                            deny: "ViewChannel"
-                        },
-                        {
-                            id: modalInteraction.user.id,
-                            allow: ["ViewChannel", "SendMessages","ManageMessages"]
-                        }
-                    ]
-                }) as TextChannel;
-
-                character.channelId = channel.id as string;
-                character.guildId = channel.guildId as string;
+                const character: Character = await getCharacter(characterId);
+                character.selectedAtt = attribute;
+                await updateCharacter(characterId, character)
+            } catch (error) {
+                console.log(`An error occurred: ${error}`.red);
             }
+        }],
+        ["mod-selector", async (selectInteraction) => {
+            try {
 
-            await db.set(characterId, character)
+                const { user } = selectInteraction
+                const mod = selectInteraction.values[0];
+                selectInteraction.deferUpdate()
+                const channel = selectInteraction.channel as TextChannel;
+                const categoryId = channel?.parent?.id;
+                const userId = selectInteraction.user.id;
+                const characterId = "character/" + categoryId + "-" + userId;
 
-            const embed = await buildFichaEmbed(characterId);
-            await modalInteraction.reply({ embeds: [embed] });
-
-            if(newCharacter){
-                await channel.send({embeds: [embed], silent: true } as MessageCreateOptions).then(sentMessage => {
-                    setTimeout(() => sentMessage.delete(), 10000);
-                })
+                const character: Character = await getCharacter(characterId);
+                character.selectedMod = parseInt(mod);
+                await updateCharacter(characterId, character)
+            } catch (error) {
+                console.log(`An error occurred: ${error}`.red);
             }
+        }]]),
+    buttons: new Collection([
+        ["attack-button", async (buttonInteraction) => {
+            try {
+                const channel = buttonInteraction.channel as TextChannel;
+                const categoryId = channel?.parent?.id;
+                const userId = buttonInteraction.user.id;
+                const characterId = "character/" + categoryId + "-" + userId;
 
-        } catch (error) {
-            console.log(`Um erro ocorreu: ${error}`.red);
+                const embed = await buildAtaqueEmbed(characterId);
+                const fichaEmbed = await buildFichaEmbed(characterId);
 
-        }
-    }
+                await buttonInteraction.update({ embeds: [fichaEmbed], components: [] });
+                await buttonInteraction.followUp({ embeds: [embed] })
+            } catch (error) {
+                console.log(`An error occurred: ${error}`.red);
+            }
+        }],
+        ["check-button", async (buttonInteraction) => {
+            try {
+                const channel = buttonInteraction.channel as TextChannel;
+                const categoryId = channel?.parent?.id;
+                const userId = buttonInteraction.user.id;
+                const characterId = "character/" + categoryId + "-" + userId;
 
-    ]])
+                let character: Character = await getCharacter(characterId);
+
+                const rolagem = rollD20();
+                const attValue = character?.selectedAtt ? character[character?.selectedAtt] : 0
+                const modValue = character?.selectedMod | 0;
+                const result = formatResult(rolagem, attValue, modValue);
+
+
+                const checkEmbed = await buildCheckEmbed(result, character, rolagem, attValue, modValue);
+
+                let levelUP = false;
+                let humanityLoss = false;
+                if (result.includes("FALHA")) {
+                    if (character.selectedAtt === "humanidade") {
+                        humanityLoss = await updateHumanidade(characterId)
+                    } else {
+                        levelUP = await updateAprendizados(characterId);
+                    }
+                }
+
+                const fichaEmbed = await buildFichaEmbed(characterId);
+                await buttonInteraction.update({ embeds: [fichaEmbed], components: [] });
+
+                await buttonInteraction.followUp({ embeds: [checkEmbed] })
+
+                if (levelUP) {
+                    await buttonInteraction.followUp({ embeds: [await buildLvlUpEmbed(character)] })
+                }
+
+                if (humanityLoss) {
+                    await buttonInteraction.followUp({ embeds: [await buildHumanityLostEmbed(character)] })
+                }
+
+            } catch (error) {
+                console.log(`An error occurred: ${error}`.red);
+            }
+        }], ["criar-ficha", async (buttonInteraction) => {
+            try {
+
+                const userId = buttonInteraction.user.id;
+                const channel = buttonInteraction.channel as TextChannel;
+                const categoryId = channel.parent?.id;
+
+                const characterId = "character/" + categoryId + "-" + userId;
+
+                await setEditCharacterId(userId, characterId);
+                buttonInteraction.showModal(await buildFichaEditPt1Modal(characterId))
+            } catch (error) {
+                console.log(`An error occurred: ${error}`.red);
+            }
+        }]
+    ])
+
 })
 
-
-export function formatChannelName(characterName: string) {
-    return `ficha-${characterName.replace(/\s+/g, '-').toLowerCase()}`;
-}

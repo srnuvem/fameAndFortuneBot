@@ -1,11 +1,9 @@
 import { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
-import { QuickDB } from "quick.db";
 import { Character } from "../structs/types/Character";
+import { getCharacter } from "./dbService";
 
-const db = new QuickDB();
-
-export async function buildDmEditModal(characterId: string) {
-    const character: Character = await db.get(characterId) as Character;
+export async function buildFichaEditPt2Modal(characterId: string) {
+    const character: Character = await getCharacter(characterId);
     const pv = new ActionRowBuilder<TextInputBuilder>({
         components: [
             new TextInputBuilder({

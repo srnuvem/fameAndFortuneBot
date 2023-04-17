@@ -1,18 +1,16 @@
 import { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
-import { QuickDB } from "quick.db";
 import { Character } from "../structs/types/Character";
+import { getCharacter } from "./dbService";
 
-const db = new QuickDB();
-
-export async function buildaprendizadoModal(characterId: string) {
-    const character: Character = await db.get(characterId) as Character;
+export async function buildFichaEditPt3Modal(characterId: string) {
+    const character: Character = await getCharacter(characterId);
 
     const humanidade = new ActionRowBuilder<TextInputBuilder>({
         components: [
             new TextInputBuilder({
                 custom_id: 'form-aprendizado-humanidade-input',
                 label: "Humanidade:",
-                value: character?.humanidade ? character?.aprendizados.toString() : undefined,
+                value: character?.humanidade ? character?.humanidade.toString() : undefined,
                 placeholder: "Edite a Humanidade",
                 style: TextInputStyle.Short,
                 maxLength: 2,
@@ -45,8 +43,6 @@ export async function buildaprendizadoModal(characterId: string) {
                 style: TextInputStyle.Short,
                 max_length: 2,
                 required: false
-
-
             }),
         ]
     })
@@ -61,8 +57,6 @@ export async function buildaprendizadoModal(characterId: string) {
                 style: TextInputStyle.Short,
                 max_length: 2,
                 required: false
-
-
             }),
         ]
     })

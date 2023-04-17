@@ -1,8 +1,7 @@
 export function rollD20() {
-    let min = 1;
-    let max = 20;
-    let mathLogic = Math.floor(Math.random() * (max - min + 1)) + min;
-    return mathLogic
+    const min = 1;
+    const max = 20;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export function formatResult(roll: number, attValue: number, modValue: number) {
@@ -17,25 +16,18 @@ export function formatResult(roll: number, attValue: number, modValue: number) {
 }
 
 export function getColor(result: string) {
-    var color;
     switch (result) {
         case 'SUCESSO':
-            color = 0x01cbf3;
-            break;
+            return 0x01cbf3;
         case 'CRITICO':
-            color = 0x00ff51;
-            break;
+            return 0x00ff51;
         case 'FALHA':
-            color = 0xf30135;
-            break;
+            return 0xf30135;
         case 'FALHA CRITICA':
-            color = 0x000000;
-            break;
+            return 0x000000;
         default:
-            color = 0xffffff;
+            return 0xffffff;
     }
-    return color;
-
 }
 
 export function formatAtt(att: string) {
@@ -91,4 +83,8 @@ export function formatAprendizados(aprendizados: number): string {
         aprendizados--;
     }
     return formattedApprendizados;
+}
+
+export function formatChannelName(characterName: string) {
+    return `ficha-${characterName.replace(/\s+/g, '-').toLowerCase()}`;
 }
