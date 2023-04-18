@@ -1,13 +1,7 @@
-import { ExtendedClient } from "./structs/ExtendedClient"
-export * from "colors";
-import config from "./config.json";
-import path from "path";
-
-import fs from "fs";
-
-const client = new ExtendedClient();
-client.start();
-
+import config from './config.json'
+import { ExtendedClient } from './structs/ExtendedClient'
+export * from 'colors'
 export { client, config }
 
-
+const client = new ExtendedClient()
+client.start()
