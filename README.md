@@ -100,12 +100,10 @@ Este projeto está licenciado sob a Licença AGPL 3.0. Consulte o arquivo [LICEN
 Made with :heart: by <a href="https://github.com/srnuvem" target="_blank">Sr. Claude</a>
 Using the discord bot Handler by <a href="https://github.com/rinckonobre" target="_blank">Rincko</a>
 
-&#xa0;
-
 ## 🎨 Arts
 
 <img src="./assets/cyberpunk.png" alt="FameAndFortuneBot" /> <a href="https://www.flaticon.com/br/icones-gratis/cyberpunk" title="cyberpunk ícones">Cyberpunk ícones criados por Freepik - Flaticon</a> 
 
 
-
+&#xa0;
 <a href="#top">Back to top</a>
