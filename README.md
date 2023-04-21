@@ -1,5 +1,5 @@
 <div align="center" id="top"> 
-  <img src="./bandeira(128x128).png" alt="Discordbotv14" />
+  <img src="./bandeira(128x128).png" alt="FameAndFortuneBot" />
 
   &#xa0;
 
@@ -9,19 +9,19 @@
 <h1 align="center">FameAndFortuneBot</h1>
 
 <p align="center">
-  <img alt="Github top language" src="https://img.shields.io/github/languages/top/srnuvem/discordbotv14?color=56BEB8">
+  <img alt="Github top language" src="https://img.shields.io/github/languages/top/srnuvem/fameAndFortuneBot?color=56BEB8">
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/srnuvem/discordbotv14?color=56BEB8">
+  <img alt="Github language count" src="https://img.shields.io/github/languages/count/srnuvem/fameAndFortuneBot?color=56BEB8">
 
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/srnuvem/discordbotv14?color=56BEB8">
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/srnuvem/fameAndFortuneBot?color=56BEB8">
 
-  <img alt="License" src="https://img.shields.io/github/license/srnuvem/discordbotv14?color=56BEB8">
+  <img alt="License" src="https://img.shields.io/github/license/srnuvem/fameAndFortuneBot?color=56BEB8">
 
-  <!-- <img alt="Github issues" src="https://img.shields.io/github/issues/srnuvem/discordbotv14?color=56BEB8" /> -->
+  <!-- <img alt="Github issues" src="https://img.shields.io/github/issues/srnuvem/fameAndFortuneBot?color=56BEB8" /> -->
 
-  <!-- <img alt="Github forks" src="https://img.shields.io/github/forks/srnuvem/discordbotv14?color=56BEB8" /> -->
+  <!-- <img alt="Github forks" src="https://img.shields.io/github/forks/srnuvem/fameAndFortuneBot?color=56BEB8" /> -->
 
-  <!-- <img alt="Github stars" src="https://img.shields.io/github/stars/srnuvem/discordbotv14?color=56BEB8" /> -->
+  <!-- <img alt="Github stars" src="https://img.shields.io/github/stars/srnuvem/fameAndFortuneBot?color=56BEB8" /> -->
 </p>
 
 <!-- Status -->
