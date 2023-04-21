@@ -96,8 +96,10 @@ $ npm run dev
 
 ## :memo: License ##
 
+Este projeto está licenciado sob a Licença AGPL 3.0. Consulte o arquivo [LICENSE](./LICENSE) para obter mais informações.
 
-Made with :heart: by <a href="https://github.com/srnuvem" target="_blank">{{YOUR_NAME}}</a>
+Made with :heart: by <a href="https://github.com/srnuvem" target="_blank">Sr. Claude</a>
+Using the discord bot Handler by <a href="https://github.com/rinckonobre" target="_blank">Rincko</a>
 
 &#xa0;
 

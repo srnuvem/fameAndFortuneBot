@@ -12,13 +12,13 @@ export default new Event({
     async run() {
         const { commands, buttons, selects, modals } = client
 
-        console.log('✅ Bot online'.green)
-        console.log(`Commands loaded: ${commands.size}`.cyan)
-        console.log(`Buttons loaded: ${buttons.size}`.cyan)
-        console.log(`Select Menus loaded: ${selects.size}`.cyan)
-        console.log(`Modals loaded: ${modals.size}`.cyan)
+        console.log('✅ Bot online')
+        console.log(`Commands loaded: ${commands.size}`)
+        console.log(`Buttons loaded: ${buttons.size}`)
+        console.log(`Select Menus loaded: ${selects.size}`)
+        console.log(`Modals loaded: ${modals.size}`)
         db.set('running', 'Yes')
-        db.get('running').then((value) => console.log(`QuickDB running: ${value}`.cyan))
+        db.get('running').then((value) => console.log(`QuickDB running: ${value}`))
 
         setInterval(async () => {
             const entries = await db.all()

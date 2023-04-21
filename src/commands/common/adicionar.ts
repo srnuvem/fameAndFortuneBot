@@ -63,7 +63,7 @@ export default new Command({
             updateCharacter(characterId, character)
             await interaction.reply(`${character.name} recebeu ${quantidade} moeda`)
         } catch (error) {
-            console.log(`Um erro ocorreu: ${error}`.red)
+            console.log(`Um erro ocorreu: ${error}`)
         }
     },
 })

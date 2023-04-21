@@ -45,10 +45,10 @@ export class ExtendedClient extends Client {
         this.application?.commands
             .set(commands)
             .then(() => {
-                console.log('✅ Slash Commands (/) defined'.green)
+                console.log('✅ Slash Commands (/) defined')
             })
             .catch((error) => {
-                console.log(`❌ An error occurred while trying to set the Slash Commands (/): \n${error}`.red)
+                console.log(`❌ An error occurred while trying to set the Slash Commands (/): \n${error}`)
             })
     }
     private registerModules() {
@@ -88,7 +88,7 @@ export class ExtendedClient extends Client {
                     try {
                         if (name) once ? this.once(name, run) : this.on(name, run)
                     } catch (error) {
-                        console.log(`An error occurred on event: ${name} \n${error}`.red)
+                        console.log(`An error occurred on event: ${name} \n${error}`)
                     }
                 })
         })
