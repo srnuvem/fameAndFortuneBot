@@ -58,10 +58,8 @@ Describe your project
 
 The following tools were used in this project:
 
--   [Expo](https://expo.io/)
+-   [DiscordJS](https://discord.js.org/)
 -   [Node.js](https://nodejs.org/en/)
--   [React](https://pt-br.reactjs.org/)
--   [React Native](https://reactnative.dev/)
 -   [TypeScript](https://www.typescriptlang.org/)
 
 ## ✅ Requirements
@@ -103,6 +101,7 @@ Using the discord bot Handler by <a href="https://github.com/rinckonobre" target
 ## 🎨 Arts
 
 <img src="./assets/cyberpunk.png" alt="FameAndFortuneBot" /> <a href="https://www.flaticon.com/br/icones-gratis/cyberpunk" title="cyberpunk ícones">Cyberpunk ícones criados por Freepik - Flaticon</a> 
+
 
 
 &#xa0;
