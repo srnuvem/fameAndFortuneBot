@@ -72,13 +72,15 @@ Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) an
 
 ```bash
 # Clone this project
-$ git clone https://github.com/srnuvem/discordbotv14
+$ git clone https://github.com/srnuvem/fameAndFortuneBot
 
 # Access
-$ cd discordbotv14
+$ cd fameAndFortuneBot
 
-# Install dependencies
-$ yarn
+# Instale o Node.js e o NPM
+$ sudo apt-get update
+$ sudo apt-get install nodejs
+$ sudo apt-get install npm
 
 # Run the project
 $ yarn start
@@ -95,8 +97,9 @@ Made with :heart: by <a href="https://github.com/srnuvem" target="_blank">{{YOUR
 
 &#xa0;
 
+<a href="https://www.flaticon.com/br/icones-gratis/cyberpunk" title="cyberpunk ícones">Cyberpunk ícones criados por Freepik - Flaticon</a>
+
 <a href="#top">Back to top</a>
 
 
 
-<a href="https://www.flaticon.com/br/icones-gratis/cyberpunk" title="cyberpunk ícones">Cyberpunk ícones criados por Freepik - Flaticon</a>
