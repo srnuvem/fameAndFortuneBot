@@ -15,7 +15,7 @@ export default new Event({
         try {
             command.run({ client, interaction, options })
         } catch (error) {
-            console.log(`❌ An error occurred: \n${error}`.red)
+            console.log(`❌ An error occurred: \n${error}`)
         }
     },
 })

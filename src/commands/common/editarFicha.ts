@@ -82,7 +82,7 @@ export default new Command({
 
             interaction.showModal(modal)
         } catch (error) {
-            console.log(`Um erro ocorreu: ${error}`.red)
+            console.log(`Um erro ocorreu: ${error}`)
         }
     },
     modals: new Collection([
@@ -156,7 +156,7 @@ export default new Command({
                             })
                     }
                 } catch (error) {
-                    console.log(`Um erro ocorreu: ${error}`.red)
+                    console.log(`Um erro ocorreu: ${error}`)
                 }
             },
         ],
@@ -180,7 +180,7 @@ export default new Command({
                     const embed = await buildFichaEmbed(characterId)
                     modalInteraction.reply({ embeds: [embed] })
                 } catch (error) {
-                    console.log(`Um erro ocorreu: ${error}`.red)
+                    console.log(`Um erro ocorreu: ${error}`)
                 }
             },
         ],
@@ -204,7 +204,7 @@ export default new Command({
                     const embed = await buildFichaEmbed(characterId)
                     modalInteraction.reply({ embeds: [embed] })
                 } catch (error) {
-                    console.log(`Um erro ocorreu: ${error}`.red)
+                    console.log(`Um erro ocorreu: ${error}`)
                 }
             },
         ],

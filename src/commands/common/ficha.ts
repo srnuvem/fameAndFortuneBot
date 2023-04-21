@@ -48,7 +48,7 @@ export default new Command({
                 setTimeout(() => repliedMessage.delete(), 300000)
             })
         } catch (error) {
-            console.log(`Ficha Não encontrada: ${error}`.red)
+            console.log(`Ficha Não encontrada: ${error}`)
             const embed = await buildFichaCreationEmbed()
             const components = await buildFichaCreationComponents()
             await interaction.reply({
@@ -75,7 +75,7 @@ export default new Command({
                     character.selectedAtt = attribute
                     await updateCharacter(characterId, character)
                 } catch (error) {
-                    console.log(`An error occurred: ${error}`.red)
+                    console.log(`An error occurred: ${error}`)
                 }
             },
         ],
@@ -96,7 +96,7 @@ export default new Command({
                     character.selectedMod = parseInt(mod)
                     await updateCharacter(characterId, character)
                 } catch (error) {
-                    console.log(`An error occurred: ${error}`.red)
+                    console.log(`An error occurred: ${error}`)
                 }
             },
         ],
@@ -121,7 +121,7 @@ export default new Command({
                     })
                     await buttonInteraction.followUp({ embeds: [embed] })
                 } catch (error) {
-                    console.log(`An error occurred: ${error}`.red)
+                    console.log(`An error occurred: ${error}`)
                 }
             },
         ],
@@ -174,7 +174,7 @@ export default new Command({
                         })
                     }
                 } catch (error) {
-                    console.log(`An error occurred: ${error}`.red)
+                    console.log(`An error occurred: ${error}`)
                 }
             },
         ],
@@ -191,7 +191,7 @@ export default new Command({
                     await setEditCharacterId(userId, characterId)
                     buttonInteraction.showModal(await buildFichaEditPt1Modal(characterId))
                 } catch (error) {
-                    console.log(`An error occurred: ${error}`.red)
+                    console.log(`An error occurred: ${error}`)
                 }
             },
         ],
