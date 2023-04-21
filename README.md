@@ -77,20 +77,20 @@ $ git clone https://github.com/srnuvem/fameAndFortuneBot
 # Access
 $ cd fameAndFortuneBot
 
-# Instale o Node.js e o NPM
+# Install Node.js and NPM
 $ sudo apt-get update
 $ sudo apt-get install nodejs
 $ sudo apt-get install npm
 
-# Run the project
-$ yarn start
+# Install Dependencies
+$ npm install
 
-# The server will initialize in the <http://localhost:3000>
+# Run the project
+$ npm run dev
+
 ```
 
 ## :memo: License ##
-
-This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
 
 
 Made with :heart: by <a href="https://github.com/srnuvem" target="_blank">{{YOUR_NAME}}</a>
