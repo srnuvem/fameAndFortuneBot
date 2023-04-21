@@ -1,5 +1,5 @@
 <div align="center" id="top"> 
-  <img src="./bandeira(128x128).png" alt="FameAndFortuneBot" />
+  <img src="./assets/bandeira(128x128).png" alt="FameAndFortuneBot" />
 
   &#xa0;
 
@@ -101,7 +101,7 @@ Made with :heart: by <a href="https://github.com/srnuvem" target="_blank">{{YOUR
 
 &#xa0;
 
-<a href="https://www.flaticon.com/br/icones-gratis/cyberpunk" title="cyberpunk ícones">Cyberpunk ícones criados por Freepik - Flaticon</a>
+<img src="./assets/bandeira(128x128).png" alt="FameAndFortuneBot" /><a href="https://www.flaticon.com/br/icones-gratis/cyberpunk" title="cyberpunk ícones">Cyberpunk ícones criados por Freepik - Flaticon</a>
 
 <a href="#top">Back to top</a>
 
