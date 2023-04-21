@@ -48,13 +48,13 @@
 
 Describe your project
 
-## :sparkles: Features
+## ✨ Features
 
 :heavy_check_mark: Feature 1;\
 :heavy_check_mark: Feature 2;\
 :heavy_check_mark: Feature 3;
 
-## :rocket: Technologies
+## 🚀 Technologies
 
 The following tools were used in this project:
 
@@ -64,11 +64,11 @@ The following tools were used in this project:
 -   [React Native](https://reactnative.dev/)
 -   [TypeScript](https://www.typescriptlang.org/)
 
-## :white_check_mark: Requirements
+## ✅ Requirements
 
 Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Node](https://nodejs.org/en/) installed.
 
-## :checkered_flag: Starting
+## 🏁 Starting
 
 ```bash
 # Clone this project
@@ -93,7 +93,7 @@ $ npm run dev
 
 ```
 
-## :memo: License
+## 📝 License
 
 Este projeto está licenciado sob a Licença AGPL 3.0. Consulte o arquivo [LICENSE](./LICENSE) para obter mais informações.
 
@@ -104,7 +104,6 @@ Using the discord bot Handler by <a href="https://github.com/rinckonobre" target
 
 ## 🎨 Arts
 
-<img src="./assets/cyberpunk.png" alt="FameAndFortuneBot" />
-<a href="https://www.flaticon.com/br/icones-gratis/cyberpunk" title="cyberpunk ícones">Cyberpunk ícones criados por Freepik - Flaticon</a> 
+<img src="./assets/cyberpunk.png" alt="FameAndFortuneBot" /> <a href="https://www.flaticon.com/br/icones-gratis/cyberpunk" title="cyberpunk ícones">Cyberpunk ícones criados por Freepik - Flaticon</a> 
 
 <a href="#top">Back to top</a>
