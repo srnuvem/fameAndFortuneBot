@@ -102,6 +102,6 @@ Using the discord bot Handler by <a href="https://github.com/rinckonobre" target
 
 &#xa0;
 
-<img src="./assets/bandeira(128x128).png" alt="FameAndFortuneBot" /> <a href="https://www.flaticon.com/br/icones-gratis/cyberpunk" title="cyberpunk ícones">Cyberpunk ícones criados por Freepik - Flaticon</a>
+<img src="./assets/cyberpunk.png" alt="FameAndFortuneBot" /> <a href="https://www.flaticon.com/br/icones-gratis/cyberpunk" title="cyberpunk ícones">Cyberpunk ícones criados por Freepik - Flaticon</a>
 
 <a href="#top">Back to top</a>
