@@ -1,7 +1,7 @@
 <div align="center" id="top"> 
   <img src="./bandeira(128x128).png" alt="FameAndFortuneBot" />
 
-  &#xa0;
+&#xa0;
 
   <!-- <a href="https://discordbotv14.netlify.app">Demo</a> -->
 </div>
@@ -26,9 +26,9 @@
 
 <!-- Status -->
 
-<!-- <h4 align="center"> 
+<!-- <h4 align="center">
 	🚧  Discordbotv14 🚀 Under construction...  🚧
-</h4> 
+</h4>
 
 <hr> -->
 
@@ -44,31 +44,31 @@
 
 <br>
 
-## :dart: About ##
+## :dart: About
 
 Describe your project
 
-## :sparkles: Features ##
+## :sparkles: Features
 
 :heavy_check_mark: Feature 1;\
 :heavy_check_mark: Feature 2;\
 :heavy_check_mark: Feature 3;
 
-## :rocket: Technologies ##
+## :rocket: Technologies
 
 The following tools were used in this project:
 
-- [Expo](https://expo.io/)
-- [Node.js](https://nodejs.org/en/)
-- [React](https://pt-br.reactjs.org/)
-- [React Native](https://reactnative.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
+-   [Expo](https://expo.io/)
+-   [Node.js](https://nodejs.org/en/)
+-   [React](https://pt-br.reactjs.org/)
+-   [React Native](https://reactnative.dev/)
+-   [TypeScript](https://www.typescriptlang.org/)
 
-## :white_check_mark: Requirements ##
+## :white_check_mark: Requirements
 
 Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Node](https://nodejs.org/en/) installed.
 
-## :checkered_flag: Starting ##
+## :checkered_flag: Starting
 
 ```bash
 # Clone this project
@@ -85,7 +85,6 @@ $ sudo apt-get install npm
 # Install Dependencies
 $ npm install
 
-
 # Create .env file
 echo BOT_TOKEN={{Your_Discord_Token}} >> .env
 
@@ -94,7 +93,7 @@ $ npm run dev
 
 ```
 
-## :memo: License ##
+## :memo: License
 
 Este projeto está licenciado sob a Licença AGPL 3.0. Consulte o arquivo [LICENSE](./LICENSE) para obter mais informações.
 
@@ -102,10 +101,8 @@ Made with :heart: by <a href="https://github.com/srnuvem" target="_blank">Sr. Cl
 Using the discord bot Handler by <a href="https://github.com/rinckonobre" target="_blank">Rincko</a>
 
 &#xa0;
-
+<img src="./bandeira(128x128).png" alt="FameAndFortuneBot"
 <a href="https://www.flaticon.com/br/icones-gratis/cyberpunk" title="cyberpunk ícones">Cyberpunk ícones criados por Freepik - Flaticon</a>
+/>
 
 <a href="#top">Back to top</a>
-
-
-
