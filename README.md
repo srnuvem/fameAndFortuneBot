@@ -77,13 +77,17 @@ $ git clone https://github.com/srnuvem/fameAndFortuneBot
 # Access
 $ cd fameAndFortuneBot
 
-# Install Node.js and NPM
-$ sudo apt-get update
-$ sudo apt-get install nodejs
+# Install NVM, Node.js and NPM
+$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && source ~/.bashrc
+$ nvm install 16.19.1
 $ sudo apt-get install npm
 
 # Install Dependencies
 $ npm install
+
+
+# Create .env file
+echo BOT_TOKEN={{Your_Discord_Token}} >> .env
 
 # Run the project
 $ npm run dev
