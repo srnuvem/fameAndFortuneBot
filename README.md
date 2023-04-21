@@ -72,18 +72,26 @@ Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) an
 
 ```bash
 # Clone this project
-$ git clone https://github.com/srnuvem/discordbotv14
+$ git clone https://github.com/srnuvem/fameAndFortuneBot
 
 # Access
-$ cd discordbotv14
+$ cd fameAndFortuneBot
 
-# Install dependencies
-$ yarn
+# Install NVM, Node.js and NPM
+$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && source ~/.bashrc
+$ nvm install 16.19.1
+$ sudo apt-get install npm
+
+# Install Dependencies
+$ npm install
+
+
+# Create .env file
+echo BOT_TOKEN={{Your_Discord_Token}} >> .env
 
 # Run the project
-$ yarn start
+$ npm run dev
 
-# The server will initialize in the <http://localhost:3000>
 ```
 
 ## :memo: License ##
@@ -95,8 +103,9 @@ Using the discord bot Handler by <a href="https://github.com/rinckonobre" target
 
 &#xa0;
 
+<a href="https://www.flaticon.com/br/icones-gratis/cyberpunk" title="cyberpunk ícones">Cyberpunk ícones criados por Freepik - Flaticon</a>
+
 <a href="#top">Back to top</a>
 
 
 
-<a href="https://www.flaticon.com/br/icones-gratis/cyberpunk" title="cyberpunk ícones">Cyberpunk ícones criados por Freepik - Flaticon</a>
