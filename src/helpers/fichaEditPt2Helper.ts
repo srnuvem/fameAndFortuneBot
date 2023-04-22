@@ -34,9 +34,9 @@ export async function buildFichaEditPt2Modal(characterId: string) {
         components: [
             new TextInputBuilder({
                 custom_id: 'form-ficha-perolas-input',
-                label: 'Perolas',
+                label: 'Pérolas',
                 value: character?.perolas ? character.perolas.toString() : undefined,
-                placeholder: 'Altere as perolas aqui 🔮',
+                placeholder: 'Altere as pérolas aqui 🔮',
                 style: TextInputStyle.Short,
                 required: false,
             }),

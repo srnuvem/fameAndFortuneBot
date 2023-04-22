@@ -41,7 +41,7 @@ export default new Command({
                 {
                     name: 'pt2',
                     type: ApplicationCommandOptionType.Subcommand,
-                    description: 'Editar PV, Moeda, Perolas, Foto, Cor',
+                    description: 'Editar PV, Moeda, Pérolas, Foto, Cor',
                     options: [
                         {
                             name: 'usuario',

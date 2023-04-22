@@ -5,7 +5,7 @@ import { Command } from '../../structs/types/Command'
 
 export default new Command({
     name: 'pagar',
-    description: 'Adiciona ou remove moeda ou perolas á sua ficha',
+    description: 'Adiciona ou remove moeda ou pérolas á sua ficha',
     type: ApplicationCommandType.ChatInput,
     options: [
         {
@@ -30,7 +30,7 @@ export default new Command({
         {
             name: 'perolas',
             type: ApplicationCommandOptionType.Subcommand,
-            description: 'Adiciona ou remove perolas de uma ficha',
+            description: 'Adiciona ou remove pérolas de uma ficha',
             options: [
                 {
                     name: 'usuario',
@@ -69,7 +69,7 @@ export default new Command({
 
             await interaction.reply(reply)
         } catch (error) {
-            console.log(`Ficha Não encontrada: ${error}`.red)
+            console.log(`Ficha Não encontrada: ${error}`)
             const embed = await buildFichaCreationEmbed()
             const components = await buildFichaCreationComponents()
             await interaction.reply({

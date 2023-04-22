@@ -39,7 +39,7 @@ export default new Event({
                         silent: true,
                     } as MessageCreateOptions)
                     .then((sentMessage) => {
-                        setTimeout(() => sentMessage.delete(), 29000)
+                        setTimeout(() => sentMessage.delete(), 30000)
                     })
                 channelN
                     .send({
@@ -47,7 +47,7 @@ export default new Event({
                         silent: true,
                     } as MessageCreateOptions)
                     .then((sentMessage) => {
-                        setTimeout(() => sentMessage.delete(), 29000)
+                        setTimeout(() => sentMessage.delete(), 30000)
                     })
             })
         }, 30000)

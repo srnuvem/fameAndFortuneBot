@@ -38,7 +38,7 @@ export async function buildFichaEmbed(characterId: string) {
         ${formatAprendizados(character?.aprendizados.manha)} | **Manha:** ${character?.manha}  
         ${formatAprendizados(character?.aprendizados.ardil)} | **Ardil:** ${character?.ardil}
         \u200B
-        **Moeda🪙:  ${character?.moeda}€$**   **Perolas🔮:  ${character?.perolas} CryPe**
+        **Moeda🪙:  ${character?.moeda}€$**   **Pérolas🔮:  ${character?.perolas} CryPe**
         `
         )
         .setColor(character?.color as ColorResolvable)

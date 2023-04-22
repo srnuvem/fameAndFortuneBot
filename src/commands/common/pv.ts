@@ -87,7 +87,7 @@ export default new Command({
 
             updateCharacter(characterId, character)
         } catch (error) {
-            console.log(`Ficha Não encontrada: ${error}`.red)
+            console.log(`Ficha Não encontrada: ${error}`)
             const embed = await buildFichaCreationEmbed()
             const components = await buildFichaCreationComponents()
             await interaction.reply({
