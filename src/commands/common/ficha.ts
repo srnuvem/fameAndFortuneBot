@@ -35,10 +35,11 @@ export default new Command({
             // Define se a mensagem é efemera ou nao baseado no nome do canal
             const channel = interaction.channel as TextChannel
             const ephemeral = !channel.name.includes('ficha')
-            const categoryId = channel?.parent?.id
+            const categoryId = channel.parent?.id ? channel.parent?.id : ''
+            const guildId = interaction?.guild?.id ? channel.guild?.id : ''
 
             const userId = options?.getUser('usuario')?.id
-            const characterId = 'character/' + categoryId + '-' + (userId || interaction.user.id)
+            const characterId = getCharacterId(userId || interaction.user.id, categoryId, guildId)
 
             const embed = await buildFichaEmbed(characterId)
 
