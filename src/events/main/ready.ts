@@ -13,12 +13,12 @@ export default new Event({
         const { commands, buttons, selects, modals } = client
 
         console.log('✅ Bot online')
-        console.log(`Commands loaded: ${commands.size}`)
-        console.log(`Buttons loaded: ${buttons.size}`)
-        console.log(`Select Menus loaded: ${selects.size}`)
-        console.log(`Modals loaded: ${modals.size}`)
-        db.set('running', 'Yes')
-        db.get('running').then((value) => console.log(`QuickDB running: ${value}`))
+        console.log(`✅ Commands loaded: ${commands.size}`)
+        console.log(`✅ Buttons loaded: ${buttons.size}`)
+        console.log(`✅ Select Menus loaded: ${selects.size}`)
+        console.log(`✅ Modals loaded: ${modals.size}`)
+        await db.set('running', '✅')
+        console.log(`${await db.get('running')} QuickDB running`)
 
         setInterval(async () => {
             const entries = await db.all()
