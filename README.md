@@ -44,9 +44,9 @@
 
 <br>
 
-## :dart: About
+## 🎯 About
 
-Describe your project
+Este bot funciona como ficha e bot de rolagens do sistema fama e fortuna.
 
 ## ✨ Features
 
