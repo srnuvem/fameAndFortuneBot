@@ -34,7 +34,7 @@ export async function buildFichaEmbed(characterId: string) {
             )}
         
         ${formatAprendizados(character?.aprendizados.forca)} | **Força:** ${character?.forca} 
-        ${formatAprendizados(character?.aprendizados.astucia)} | **Astucia:** ${character?.astucia}  
+        ${formatAprendizados(character?.aprendizados.astucia)} | **Astúcia:** ${character?.astucia}  
         ${formatAprendizados(character?.aprendizados.manha)} | **Manha:** ${character?.manha}  
         ${formatAprendizados(character?.aprendizados.ardil)} | **Ardil:** ${character?.ardil}
         \u200B

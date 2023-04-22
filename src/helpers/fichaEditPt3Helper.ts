@@ -23,7 +23,7 @@ export async function buildFichaEditPt3Modal(characterId: string) {
         components: [
             new TextInputBuilder({
                 custom_id: 'form-aprendizado-forca-input',
-                label: 'Força',
+                label: 'Aprendizado em Força',
                 value: character?.aprendizados?.forca ? character?.aprendizados?.forca.toString() : undefined,
                 placeholder: 'Edite o aprendizado de Força 💪❤️',
                 style: TextInputStyle.Short,
@@ -37,7 +37,7 @@ export async function buildFichaEditPt3Modal(characterId: string) {
         components: [
             new TextInputBuilder({
                 custom_id: 'form-aprendizado-astucia-input',
-                label: 'Astúcia',
+                label: 'Aprendizado em Astúcia',
                 value: character?.aprendizados.astucia ? character?.aprendizados.astucia.toString() : undefined,
                 placeholder: 'Edite o aprendizado de Astúcia 🧠👀',
                 style: TextInputStyle.Short,
@@ -51,7 +51,7 @@ export async function buildFichaEditPt3Modal(characterId: string) {
         components: [
             new TextInputBuilder({
                 custom_id: 'form-aprendizado-manha-input',
-                label: 'Manha',
+                label: 'Aprendizado em Manha',
                 value: character?.aprendizados.manha ? character?.aprendizados.manha.toString() : undefined,
                 placeholder: 'Edite o aprendizado de Manha 🏃‍♀️🤾‍♂️',
                 style: TextInputStyle.Short,
@@ -65,7 +65,7 @@ export async function buildFichaEditPt3Modal(characterId: string) {
         components: [
             new TextInputBuilder({
                 custom_id: 'form-aprendizado-ardil-input',
-                label: 'Ardil',
+                label: 'Aprendizado em Ardil',
                 value: character?.aprendizados.ardil ? character?.aprendizados.ardil.toString() : undefined,
                 placeholder: 'Edite o aprendizado de Ardil 🗨️👄',
                 style: TextInputStyle.Short,
