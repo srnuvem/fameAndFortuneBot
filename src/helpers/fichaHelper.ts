@@ -28,9 +28,9 @@ export async function buildFichaEmbed(characterId: string) {
         .setTitle(`${character?.name}`)
         .setDescription(
             `
-        **Humanidade:** ${character?.humanidade}     **PV:** ${character?.PV}/${character?.maxPV} ${getHealthEmoji(
-                character?.PV,
-                character?.maxPV
+        **Humanidade:** ${character?.humanidade}     **PV:** ${character?.pv}/${character?.maxPv} ${getHealthEmoji(
+                character?.pv,
+                character?.maxPv
             )}
         
         ${formatAprendizados(character?.aprendizados.forca)} | **Força:** ${character?.forca} 
@@ -144,6 +144,7 @@ export async function buildAtaqueEmbed(characterId: string) {
         .setColor('White')
         .setThumbnail(character?.thumbURL)
 }
+
 export async function buildCheckEmbed(result: string, character: Character, rolagem: number, attValue: number, modValue: number) {
     return new EmbedBuilder()
         .setTitle(`${result} ${character?.name} 🎲:${rolagem}`)
@@ -171,6 +172,13 @@ export async function updateAprendizados(characterId: string) {
     if (levelUP) {
         character.aprendizados[character?.selectedAtt] = 0
         character[character?.selectedAtt] += 1
+        if (character?.selectedAtt === 'forca') {
+            if (character.pv === character.maxPv) {
+                character.maxPv = character.forca * 5
+                character.pv = character.maxPv
+            }
+            character.maxPv = character.forca * 5
+        }
     } else {
         character.aprendizados[character?.selectedAtt] += 1
     }
@@ -180,11 +188,8 @@ export async function updateAprendizados(characterId: string) {
 }
 export async function updateHumanidade(characterId: string) {
     let character: Character = await getCharacter(characterId)
-
-    character[character?.selectedAtt] -= 1
+    character.humanidade -= 1
     await updateCharacter(characterId, character)
-
-    return true
 }
 
 export async function buildLvlUpEmbed(character: Character) {
@@ -207,4 +212,12 @@ export async function buildHumanityLostEmbed(character: Character) {
         )
         .setThumbnail(character?.thumbURL)
         .setFooter({ text: 'Cuidado! 💀' })
+}
+
+export function buildRequestAttEmbed(character: Character) {
+    return new EmbedBuilder()
+        .setTitle(`Atributo e Mod necessários`)
+        .setDescription(`${character?.name} você precisa selecionar o Atributo e o Mod nas rolagens`)
+        .setColor('Red')
+        .setThumbnail('https://i.ibb.co/RCT50Gb/error.png')
 }

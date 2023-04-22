@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ApplicationCommandType, Collection, TextChannel } from 'discord.js'
+import { ApplicationCommandType, Collection, TextChannel } from 'discord.js'
 import { getCharacter, getCharacterId, setEditCharacterId, updateCharacter } from '../../helpers/dbService'
 import { buildFichaEditPt1Modal } from '../../helpers/fichaEditPt1Helper'
 import {
@@ -10,6 +10,7 @@ import {
     buildFichaEmbed,
     buildHumanityLostEmbed,
     buildLvlUpEmbed,
+    buildRequestAttEmbed,
     updateAprendizados,
     updateHumanidade,
 } from '../../helpers/fichaHelper'
@@ -21,31 +22,29 @@ export default new Command({
     name: 'ficha',
     description: 'Envia a ficha do personagem.',
     type: ApplicationCommandType.ChatInput,
-    options: [
-        {
-            name: 'usuario',
-            description: 'Usuario',
-            type: ApplicationCommandOptionType.User,
-        },
-    ],
-    async run({ interaction, options, client }) {
+    async run({ interaction }) {
         try {
             if (!interaction.channel) return
 
             // Define se a mensagem é efemera ou nao baseado no nome do canal
             const channel = interaction.channel as TextChannel
-            const ephemeral = !channel.name.includes('ficha')
-            const categoryId = channel.parent?.id ? channel.parent?.id : ''
-            const guildId = interaction?.guild?.id ? channel.guild?.id : ''
+            const campaing = !channel.name.includes('ficha')
+            const categoryId = channel.parent?.id as string
+            const guildId = interaction?.guild?.id as string
 
-            const userId = options?.getUser('usuario')?.id
-            const characterId = getCharacterId(userId || interaction.user.id, categoryId, guildId)
+            const userId = interaction.user.id
+            const characterId = getCharacterId(userId, categoryId, guildId)
+            const character: Character = await getCharacter(characterId)
+            character.selectedAtt = ''
+            character.selectedMod = 0
+
+            await updateCharacter(characterId, character)
 
             const embed = await buildFichaEmbed(characterId)
 
-            const components = ephemeral && !userId ? await buildFichaComponents() : undefined
+            const components = campaing && character.pv > 0 ? await buildFichaComponents() : undefined
 
-            interaction.reply({ embeds: [embed], components, ephemeral }).then((repliedMessage) => {
+            interaction.reply({ embeds: [embed], components, ephemeral: campaing }).then((repliedMessage) => {
                 setTimeout(() => repliedMessage.delete(), 300000)
             })
         } catch (error) {
@@ -67,8 +66,8 @@ export default new Command({
                     const attribute = selectInteraction.values[0]
                     selectInteraction.deferUpdate()
                     const channel = selectInteraction.channel as TextChannel
-                    const categoryId = channel?.parent?.id ? channel?.parent?.id : ''
-                    const guildId = selectInteraction?.guild?.id ? selectInteraction?.guild?.id : ''
+                    const categoryId = channel?.parent?.id as string
+                    const guildId = selectInteraction?.guild?.id as string
                     const userId = selectInteraction.user.id
                     const characterId = getCharacterId(userId, categoryId, guildId)
 
@@ -88,8 +87,8 @@ export default new Command({
                     const mod = selectInteraction.values[0]
                     selectInteraction.deferUpdate()
                     const channel = selectInteraction.channel as TextChannel
-                    const categoryId = channel?.parent?.id ? channel.parent.id : ''
-                    const guildId = selectInteraction.guild?.id ? selectInteraction.guild.id : ''
+                    const categoryId = channel?.parent?.id as string
+                    const guildId = selectInteraction.guild?.id as string
                     const userId = selectInteraction.user.id
                     const characterId = getCharacterId(userId, categoryId, guildId)
 
@@ -108,19 +107,27 @@ export default new Command({
             async (buttonInteraction) => {
                 try {
                     const channel = buttonInteraction.channel as TextChannel
-                    const categoryId = channel?.parent?.id ? channel.parent.id : ''
-                    const guildId = buttonInteraction.guild?.id ? buttonInteraction.guild.id : ''
+                    const categoryId = channel?.parent?.id as string
+                    const guildId = buttonInteraction.guild?.id as string
                     const userId = buttonInteraction.user.id
                     const characterId = getCharacterId(userId, categoryId, guildId)
+                    let character: Character = await getCharacter(characterId)
 
-                    const embed = await buildAtaqueEmbed(characterId)
+                    let embed = buildRequestAttEmbed(character)
+                    let ephemeral = true
+
+                    if (character?.selectedAtt && character?.selectedMod) {
+                        embed = await buildAtaqueEmbed(characterId)
+                        ephemeral = false
+                    }
+
                     const fichaEmbed = await buildFichaEmbed(characterId)
 
                     await buttonInteraction.update({
                         embeds: [fichaEmbed],
                         components: [],
                     })
-                    await buttonInteraction.followUp({ embeds: [embed] })
+                    await buttonInteraction.followUp({ embeds: [embed], ephemeral })
                 } catch (error) {
                     console.log(`An error occurred: ${error}`)
                 }
@@ -131,28 +138,35 @@ export default new Command({
             async (buttonInteraction) => {
                 try {
                     const channel = buttonInteraction.channel as TextChannel
-                    const categoryId = channel?.parent?.id ? channel.parent.id : ''
-                    const guildId = buttonInteraction.guild?.id ? buttonInteraction.guild.id : ''
+                    const categoryId = channel?.parent?.id as string
+                    const guildId = buttonInteraction.guild?.id as string
                     const userId = buttonInteraction.user.id
                     const characterId = getCharacterId(userId, categoryId, guildId)
 
                     let character: Character = await getCharacter(characterId)
 
-                    const rolagem = rollD20()
-                    const attValue = character?.selectedAtt ? character[character?.selectedAtt] : 0
-                    const modValue = character?.selectedMod | 0
-                    const result = formatResult(rolagem, attValue, modValue)
-
-                    const checkEmbed = await buildCheckEmbed(result, character, rolagem, attValue, modValue)
+                    let checkEmbed = buildRequestAttEmbed(character)
+                    let ephemeral = true
 
                     let levelUP = false
                     let humanityLoss = false
-                    if (result.includes('FALHA')) {
-                        if (character.selectedAtt === 'humanidade') {
-                            humanityLoss = await updateHumanidade(characterId)
-                        } else {
-                            levelUP = await updateAprendizados(characterId)
+
+                    if (character?.selectedAtt && character?.selectedMod) {
+                        const rolagem = rollD20()
+                        const attValue = character?.selectedAtt ? character[character?.selectedAtt] : 0
+                        const modValue = character?.selectedMod | 0
+                        const result = formatResult(rolagem, attValue, modValue)
+
+                        checkEmbed = await buildCheckEmbed(result, character, rolagem, attValue, modValue)
+                        if (result.includes('FALHA')) {
+                            if (character?.selectedAtt === 'humanidade') {
+                                await updateHumanidade(characterId)
+                                humanityLoss = true
+                            } else {
+                                levelUP = await updateAprendizados(characterId)
+                            }
                         }
+                        ephemeral = false
                     }
 
                     const fichaEmbed = await buildFichaEmbed(characterId)
@@ -161,7 +175,7 @@ export default new Command({
                         components: [],
                     })
 
-                    await buttonInteraction.followUp({ embeds: [checkEmbed] })
+                    await buttonInteraction.followUp({ embeds: [checkEmbed], ephemeral })
 
                     if (levelUP) {
                         await buttonInteraction.followUp({
@@ -184,8 +198,8 @@ export default new Command({
             async (buttonInteraction) => {
                 try {
                     const channel = buttonInteraction.channel as TextChannel
-                    const categoryId = channel?.parent?.id ? channel.parent.id : ''
-                    const guildId = buttonInteraction.guild?.id ? buttonInteraction.guild.id : ''
+                    const categoryId = channel?.parent?.id as string
+                    const guildId = buttonInteraction.guild?.id as string
                     const userId = buttonInteraction.user.id
                     const characterId = getCharacterId(userId, categoryId, guildId)
 

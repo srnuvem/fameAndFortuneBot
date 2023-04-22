@@ -23,6 +23,7 @@ export default new Event({
         setInterval(async () => {
             const entries = await db.all()
             const characterEntries = entries.filter((entry) => entry.id.includes('character'))
+
             characterEntries.forEach(async (char) => {
                 const character = char.value as Character
                 const guild = client.guilds.cache.get(character.guildId)
@@ -33,23 +34,27 @@ export default new Event({
 
                 const embed = await buildFichaEmbed(character.characterId)
 
-                channel
-                    .send({
-                        embeds: [embed],
-                        silent: true,
-                    } as MessageCreateOptions)
-                    .then((sentMessage) => {
-                        setTimeout(() => sentMessage.delete(), 30000)
-                    })
-                channelN
-                    .send({
-                        embeds: [embed],
-                        silent: true,
-                    } as MessageCreateOptions)
-                    .then((sentMessage) => {
-                        setTimeout(() => sentMessage.delete(), 30000)
-                    })
+                try {
+                    channel
+                        .send({
+                            embeds: [embed],
+                            silent: true,
+                        } as MessageCreateOptions)
+                        .then((sentMessage) => {
+                            setTimeout(() => sentMessage.delete(), 10000)
+                        })
+                    channelN
+                        .send({
+                            embeds: [embed],
+                            silent: true,
+                        } as MessageCreateOptions)
+                        .then((sentMessage) => {
+                            setTimeout(() => sentMessage.delete(), 10000)
+                        })
+                } catch (error) {
+                    console.log(`Canal não encontrado: ${error}`)
+                }
             })
-        }, 30000)
+        }, 10000)
     },
 })

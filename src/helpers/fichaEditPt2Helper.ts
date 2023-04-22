@@ -9,7 +9,7 @@ export async function buildFichaEditPt2Modal(characterId: string) {
             new TextInputBuilder({
                 custom_id: 'form-ficha-pv-input',
                 label: 'PV',
-                value: character?.PV ? character?.PV.toString() : undefined,
+                value: character?.pv ? character?.pv.toString() : undefined,
                 placeholder: 'Altere o PV aqui ❤️',
                 style: TextInputStyle.Short,
                 required: false,
@@ -71,7 +71,7 @@ export async function buildFichaEditPt2Modal(characterId: string) {
     })
 
     return new ModalBuilder({
-        custom_id: 'form-dm-edit',
+        custom_id: 'form-pt2-edit',
         title: 'Crie sua personagem',
         components: [pv, moeda, perolas, thumbURL, color],
     })

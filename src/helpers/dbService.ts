@@ -15,6 +15,13 @@ export async function updateCharacter(characterId: string, character: Character)
     await db.set(characterId, character)
 }
 
+export async function killCharacter(characterId: string) {
+    const deadId = characterId.replace('character', 'dead')
+    const character = await db.get(characterId)
+    await db.set(deadId, character)
+    await db.delete(characterId)
+}
+
 export async function getCharacter(characterId: string): Promise<Character> {
     return (await db.get(characterId)) as Character
 }

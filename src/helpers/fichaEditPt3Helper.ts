@@ -76,7 +76,7 @@ export async function buildFichaEditPt3Modal(characterId: string) {
     })
 
     return new ModalBuilder({
-        custom_id: 'form-edit-aprendizados',
+        custom_id: 'form-pt3-edit',
         title: 'Edite o aprendizado e a humanidade',
         components: [forca, astucia, manha, ardil, humanidade],
     })
