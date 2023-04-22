@@ -45,24 +45,24 @@ export function formatAtt(att: string) {
     }
 }
 
-export function getHealthEmoji(PV: number, maxPV: number) {
-    if (PV === maxPV) {
+export function getHealthEmoji(pv: number, maxPv: number) {
+    if (pv === maxPv) {
         return '❤️'
     }
 
-    if (PV > 0) {
+    if (pv > 0) {
         return '❤️‍🩹'
     }
 
-    if (PV === 0) {
+    if (pv === 0) {
         return '😵'
     }
 
-    if (PV < 0 && PV > -10) {
+    if (pv < 0 && pv > -10) {
         return '⚰️'
     }
 
-    if (PV < -10) {
+    if (pv < -10) {
         return '💀'
     }
 }

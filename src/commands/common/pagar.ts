@@ -1,11 +1,11 @@
 import { ApplicationCommandOptionType, ApplicationCommandType, TextChannel } from 'discord.js'
 import { getCharacter, getCharacterId, updateCharacter } from '../../helpers/dbService'
-import { buildFichaCreationComponents, buildFichaCreationEmbed } from '../../helpers/fichaHelper'
+import { buildFichaCreationComponents, buildFichaCreationEmbed, buildFichaEmbed } from '../../helpers/fichaHelper'
 import { Command } from '../../structs/types/Command'
 
 export default new Command({
     name: 'pagar',
-    description: 'Adiciona ou remove moeda ou perolas á sua ficha',
+    description: 'Adiciona ou remove moeda ou pérolas á sua ficha',
     type: ApplicationCommandType.ChatInput,
     options: [
         {
@@ -13,12 +13,6 @@ export default new Command({
             type: ApplicationCommandOptionType.Subcommand,
             description: 'Adiciona ou remove moeda de uma ficha',
             options: [
-                {
-                    name: 'usuario',
-                    description: 'Usuario a ser editado',
-                    type: ApplicationCommandOptionType.User,
-                    required: true,
-                },
                 {
                     name: 'quantidade',
                     description: 'Quantidade à adicionar ou subtrair',
@@ -30,14 +24,8 @@ export default new Command({
         {
             name: 'perolas',
             type: ApplicationCommandOptionType.Subcommand,
-            description: 'Adiciona ou remove perolas de uma ficha',
+            description: 'Adiciona ou remove pérolas de uma ficha',
             options: [
-                {
-                    name: 'usuario',
-                    description: 'Usuario a ser editado',
-                    type: ApplicationCommandOptionType.User,
-                    required: true,
-                },
                 {
                     name: 'quantidade',
                     description: 'Quantidade à adicionar ou subtrair',
@@ -50,11 +38,11 @@ export default new Command({
     async run({ interaction, options }) {
         try {
             const channel = interaction.channel as TextChannel
-            const categoryId = channel.parent?.id ? channel.parent?.id : ''
-            const guildId = interaction?.guild?.id ? channel.guild?.id : ''
+            const categoryId = channel.parent?.id as string
+            const guildId = interaction?.guild?.id as string
             const quantidade = options.getNumber('quantidade', true)
 
-            const userId = options?.getUser('usuario', true)?.id
+            const userId = interaction.user.id
             const characterId = getCharacterId(userId, categoryId, guildId)
             const character = await getCharacter(characterId)
 
@@ -68,8 +56,14 @@ export default new Command({
                     : `${character.name} gastou ${quantidade} ${options.getSubcommand()}`
 
             await interaction.reply(reply)
+
+            const fichaEmbed = await buildFichaEmbed(characterId)
+            await interaction.followUp({
+                embeds: [fichaEmbed],
+                components: [],
+            })
         } catch (error) {
-            console.log(`Ficha Não encontrada: ${error}`.red)
+            console.log(`Ficha Não encontrada: ${error}`)
             const embed = await buildFichaCreationEmbed()
             const components = await buildFichaCreationComponents()
             await interaction.reply({

@@ -4,8 +4,8 @@ export interface Character {
     characterId: string
     channelId: string
     guildId: string
-    PV: number
-    maxPV: number
+    pv: number
+    maxPv: number
     forca: number
     astucia: number
     manha: number
@@ -30,8 +30,8 @@ export class CharacterClass implements Character {
     characterId: string = ''
     channelId: string = ''
     guildId: string = ''
-    PV: number = 0
-    maxPV: number = 0
+    pv: number = 0
+    maxPv: number = 0
     forca: number = 0
     astucia: number = 0
     manha: number = 0
@@ -43,8 +43,8 @@ export class CharacterClass implements Character {
         manha: number
         ardil: number
     } = { forca: 0, astucia: 0, manha: 0, ardil: 0 }
-    moeda: number = 0.1
-    perolas: number = 0.1
+    moeda: number = 0
+    perolas: number = 0
     color: string = 'Gold'
     thumbURL: string = 'https://i.ibb.co/WKzbDNc/user.png'
     selectedAtt: string = ''
