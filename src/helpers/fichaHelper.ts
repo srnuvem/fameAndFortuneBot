@@ -167,7 +167,7 @@ export async function buildCheckEmbed(result: string, character: Character, rola
 export async function updateAprendizados(characterId: string) {
     let character: Character = await getCharacter(characterId)
 
-    const levelUP = character?.aprendizados[character?.selectedAtt] === 4
+    const levelUP = character?.aprendizados[character?.selectedAtt] >= 4
     if (levelUP) {
         character.aprendizados[character?.selectedAtt] = 0
         character[character?.selectedAtt] += 1

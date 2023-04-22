@@ -67,9 +67,9 @@ export default new Command({
     ],
     async run({ interaction, options }) {
         try {
-            const channelId = interaction.channel as TextChannel
-            const categoryId = channelId.parent?.id ? channelId.parent?.id : ''
-            const guildId = interaction?.guild?.id ? channelId.guild?.id : ''
+            const channel = interaction.channel as TextChannel
+            const categoryId = channel.parent?.id ? channel.parent?.id : ''
+            const guildId = interaction?.guild?.id ? channel.guild?.id : ''
 
             const userId = options?.getUser('usuario')?.id ? options.getUser('usuario', true).id : interaction.user.id
 

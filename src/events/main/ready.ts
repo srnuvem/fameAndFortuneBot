@@ -1,4 +1,4 @@
-import { MessageCreateOptions, TextChannel } from 'discord.js'
+import { ChannelType, MessageCreateOptions, TextChannel } from 'discord.js'
 import { QuickDB } from 'quick.db'
 import { client } from '../..'
 import { buildFichaEmbed } from '../../helpers/fichaHelper'
@@ -27,9 +27,21 @@ export default new Event({
                 const character = char.value as Character
                 const guild = client.guilds.cache.get(character.guildId)
                 let channel = guild?.channels.cache.find((c) => c.id === character.channelId) as TextChannel
+                let channelN = guild?.channels.cache.find(
+                    (c) => c.type === ChannelType.GuildText && c.parentId === channel.parentId && c.name.includes('narradora')
+                ) as TextChannel
+
                 const embed = await buildFichaEmbed(character.characterId)
 
                 channel
+                    .send({
+                        embeds: [embed],
+                        silent: true,
+                    } as MessageCreateOptions)
+                    .then((sentMessage) => {
+                        setTimeout(() => sentMessage.delete(), 29000)
+                    })
+                channelN
                     .send({
                         embeds: [embed],
                         silent: true,
