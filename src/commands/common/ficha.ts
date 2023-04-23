@@ -116,7 +116,7 @@ export default new Command({
                     let embed = buildRequestAttEmbed(character)
                     let ephemeral = true
 
-                    if (character?.selectedAtt && character?.selectedMod) {
+                    if (character?.selectedAtt && character?.selectedMod.toString().length) {
                         embed = await buildAtaqueEmbed(characterId)
                         ephemeral = false
                     }
@@ -151,7 +151,7 @@ export default new Command({
                     let levelUP = false
                     let humanityLoss = false
 
-                    if (character?.selectedAtt && character?.selectedMod) {
+                    if (character?.selectedAtt && character?.selectedMod.toString().length) {
                         const rolagem = rollD20()
                         const attValue = character?.selectedAtt ? character[character?.selectedAtt] : 0
                         const modValue = character?.selectedMod | 0

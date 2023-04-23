@@ -163,7 +163,7 @@ export default new Command({
             if (options.getSubcommandGroup() === 'update') {
                 let modal = await buildFichaEditPt1Modal(characterId)
 
-                await setEditCharacterId(userId, characterId)
+                await setEditCharacterId(interaction.user.id, characterId)
                 if (options.getSubcommand() === 'pt2') modal = await buildFichaEditPt2Modal(characterId)
                 if (options.getSubcommand() === 'pt3') modal = await buildFichaEditPt3Modal(characterId)
 
@@ -201,7 +201,7 @@ export default new Command({
                 })
             }
         } catch (error) {
-            console.log(`Um erro ocorreu: ${error}`)
+            console.log(`Um erro ocorreu no comando de ficha : ${error}`)
         }
     },
     modals: new Collection([
@@ -274,7 +274,7 @@ export default new Command({
                             })
                     }
                 } catch (error) {
-                    console.log(`Um erro ocorreu: ${error}`)
+                    console.log(`Um erro ocorreu em form-ficha: ${error}`)
                 }
             },
         ],
@@ -298,7 +298,7 @@ export default new Command({
                     const embed = await buildFichaEmbed(characterId)
                     modalInteraction.reply({ embeds: [embed] })
                 } catch (error) {
-                    console.log(`Um erro ocorreu: ${error}`)
+                    console.log(`Um erro ocorreu em form-pt2-edit: ${error}`)
                 }
             },
         ],
@@ -322,7 +322,7 @@ export default new Command({
                     const embed = await buildFichaEmbed(characterId)
                     modalInteraction.reply({ embeds: [embed] })
                 } catch (error) {
-                    console.log(`Um erro ocorreu: ${error}`)
+                    console.log(`Um erro ocorreu em form-pt3-edit: ${error}`)
                 }
             },
         ],
