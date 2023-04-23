@@ -43,6 +43,7 @@ export default new Event({
                         .then((sentMessage) => {
                             setTimeout(() => sentMessage.delete(), 10000)
                         })
+                        .catch()
                     channelN
                         .send({
                             embeds: [embed],
