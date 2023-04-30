@@ -40,7 +40,7 @@ export default new Command({
             const channel = interaction.channel as TextChannel
             const categoryId = channel.parent?.id as string
             const guildId = interaction?.guild?.id as string
-            const quantidade = options.getNumber('quantidade', true)
+            const quantidade = Math.abs(options.getNumber('quantidade', true))
 
             const userId = interaction.user.id
             const characterId = getCharacterId(userId, categoryId, guildId)
