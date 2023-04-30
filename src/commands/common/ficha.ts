@@ -28,7 +28,7 @@ export default new Command({
 
             // Define se a mensagem é efemera ou nao baseado no nome do canal
             const channel = interaction.channel as TextChannel
-            const campaing = !channel.name.includes('ficha')
+            const campaing = channel.name.includes('campanha')
             const categoryId = channel.parent?.id as string
             const guildId = interaction?.guild?.id as string
 
