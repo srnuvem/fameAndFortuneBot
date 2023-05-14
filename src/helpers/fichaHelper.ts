@@ -221,3 +221,20 @@ export function buildRequestAttEmbed(character: Character) {
         .setColor('Red')
         .setThumbnail('https://i.ibb.co/RCT50Gb/error.png')
 }
+
+export function buildUseCampaignChannelEmbed(character: Character) {
+    return new EmbedBuilder()
+        .setTitle(`Por Favor use o canal da campanha`)
+        .setDescription(`${character?.name} você precisa usar o canal da campanha para executar comandos`)
+        .setColor('Red')
+        .setThumbnail('https://i.ibb.co/RCT50Gb/error.png')
+}
+
+
+export function buildDMOnlyEmbed(character: Character) {
+    return new EmbedBuilder()
+        .setTitle(`Comando Restrito para DMs`)
+        .setDescription(`${character?.name} pessa ajuda da pessoa DM para ajustar a ficha`)
+        .setColor('Red')
+        .setThumbnail('https://i.ibb.co/RCT50Gb/error.png')
+}

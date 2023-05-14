@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionType, ApplicationCommandType, TextChannel } from 'discord.js'
 import { getCharacter, getCharacterId, updateCharacter } from '../../helpers/dbService'
-import { buildFichaCreationComponents, buildFichaCreationEmbed, buildFichaEmbed } from '../../helpers/fichaHelper'
+import { buildFichaCreationComponents, buildFichaCreationEmbed, buildFichaEmbed, buildUseCampaignChannelEmbed } from '../../helpers/fichaHelper'
 import { Command } from '../../structs/types/Command'
 
 export default new Command({
@@ -45,6 +45,12 @@ export default new Command({
             const userId = interaction.user.id
             const characterId = getCharacterId(userId, categoryId, guildId)
             const character = await getCharacter(characterId)
+
+            const campaing = channel.name.includes('campanha')
+            if (!campaing) {
+                await interaction.reply({ embeds: [buildUseCampaignChannelEmbed(character)], ephemeral:true })
+                return
+            }
 
             if (options.getSubcommand() === 'moeda') character.moeda += quantidade
             if (options.getSubcommand() === 'perolas') character.perolas += quantidade

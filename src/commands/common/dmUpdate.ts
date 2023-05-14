@@ -20,7 +20,7 @@ import {
 import { buildFichaEditPt1Modal } from '../../helpers/fichaEditPt1Helper'
 import { buildFichaEditPt2Modal } from '../../helpers/fichaEditPt2Helper'
 import { buildFichaEditPt3Modal } from '../../helpers/fichaEditPt3Helper'
-import { buildFichaEmbed } from '../../helpers/fichaHelper'
+import { buildDMOnlyEmbed, buildFichaEmbed } from '../../helpers/fichaHelper'
 import { formatChannelName } from '../../helpers/formatters'
 import { Character, CharacterClass } from '../../structs/types/Character'
 import { Command } from '../../structs/types/Command'
@@ -146,20 +146,20 @@ export default new Command({
         try {
             const dmRole = interaction?.guild?.roles?.cache.find((role) => role.name === 'DM') as Role
             const member = interaction?.guild?.members.cache.get(interaction.user.id) as GuildMember
-
-            if (!member.roles.cache.has(dmRole.id)) {
-                interaction.reply('Comando restrito a DMs, Peça ajuda da narração.')
-                return
-            }
-
+            
             const userId = options.getUser('usuario', true).id
             const channel = interaction.channel as TextChannel
             const categoryId = channel.parent?.id as string
             const guildId = interaction?.guild?.id as string
-
+            
             const characterId = getCharacterId(userId, categoryId, guildId)
             const character = await getCharacter(characterId)
-
+            
+            if (!member.roles.cache.has(dmRole.id)) {
+                interaction.reply({embeds:[buildDMOnlyEmbed(character)], ephemeral: true})
+                return
+            }
+            
             if (options.getSubcommandGroup() === 'update') {
                 let modal = await buildFichaEditPt1Modal(characterId)
 
