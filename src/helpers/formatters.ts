@@ -82,5 +82,5 @@ export function formatAprendizados(aprendizados: number): string {
 }
 
 export function formatChannelName(characterName: string) {
-    return `ficha-${characterName.replace(/\s+/g, '-').toLowerCase()}`
+    return `${characterName.replace(/\s+/g, '-').toLowerCase()}`
 }

@@ -29,7 +29,7 @@ export default new Event({
                 const guild = client.guilds.cache.get(character.guildId)
                 let channel = guild?.channels.cache.find((c) => c.id === character.channelId) as TextChannel
                 let channelN = guild?.channels.cache.find(
-                    (c) => c.type === ChannelType.GuildText && c.parentId === channel.parentId && c.name.includes('narradora')
+                    (c) => c.type === ChannelType.GuildText && c?.parentId === channel?.parentId && c.name.includes('narradora')
                 ) as TextChannel
 
                 const embed = await buildFichaEmbed(character.characterId)
