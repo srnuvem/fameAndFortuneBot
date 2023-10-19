@@ -220,7 +220,7 @@ export default new Command({
 
                     const guild = modalInteraction.guild
                     const category = guild?.channels.cache.get(categoryId) as CategoryChannel
-                    const channelName = formatChannelName(fields.getTextInputValue('form-ficha-name-input'))
+                    const channelName = formatChannelName(`ficha-${fields.getTextInputValue('form-ficha-name-input')}`)
                     let channel = guild?.channels.cache.find((c) => c.name === channelName) as TextChannel
 
                     const newCharacter = !character
