@@ -8,7 +8,7 @@ export async function buildFichaEditPt3Modal(characterId: string) {
     const sanidade = new ActionRowBuilder<TextInputBuilder>({
         components: [
             new TextInputBuilder({
-                custom_id: 'form-aprendizado-sanidade-input',
+                custom_id: 'form-sanidade-input',
                 label: 'Sanidade:',
                 value: character?.sanidade ? character?.sanidade.toString() : undefined,
                 placeholder: 'Edite a Sanidade',

@@ -20,6 +20,7 @@ import {
 import { buildFichaEditPt1Modal } from '../../helpers/fichaEditPt1Helper'
 import { buildFichaEditPt2Modal } from '../../helpers/fichaEditPt2Helper'
 import { buildFichaEditPt3Modal } from '../../helpers/fichaEditPt3Helper'
+import { buildFichaEditPt4Modal } from '../../helpers/fichaEditPt4Helper'
 import { buildDMOnlyEmbed, buildFichaEmbed } from '../../helpers/fichaHelper'
 import { formatChannelName } from '../../helpers/formatters'
 import { Character, CharacterClass } from '../../structs/types/Character'
@@ -65,6 +66,19 @@ export default new Command({
                     name: 'pt3',
                     type: ApplicationCommandOptionType.Subcommand,
                     description: 'Comando restrito a DMs editar aprendizados e sanidade',
+                    options: [
+                        {
+                            name: 'usuario',
+                            description: 'Usuario a ser editado',
+                            type: ApplicationCommandOptionType.User,
+                            required: true,
+                        },
+                    ],
+                },
+                {
+                    name: 'pt4',
+                    type: ApplicationCommandOptionType.Subcommand,
+                    description: 'Comando restrito a DMs editar fama',
                     options: [
                         {
                             name: 'usuario',
@@ -184,6 +198,7 @@ export default new Command({
                 await setEditCharacterId(interaction.user.id, characterId)
                 if (options.getSubcommand() === 'pt2') modal = await buildFichaEditPt2Modal(characterId)
                 if (options.getSubcommand() === 'pt3') modal = await buildFichaEditPt3Modal(characterId)
+                if (options.getSubcommand() === 'pt4') modal = await buildFichaEditPt4Modal(characterId)
 
                 interaction.showModal(modal)
             }
@@ -334,7 +349,7 @@ export default new Command({
                     character.aprendizados.astucia = parseInt(fields.getTextInputValue('form-aprendizado-astucia-input'))
                     character.aprendizados.manha = parseInt(fields.getTextInputValue('form-aprendizado-manha-input'))
                     character.aprendizados.ardil = parseInt(fields.getTextInputValue('form-aprendizado-ardil-input'))
-                    character.sanidade = parseInt(fields.getTextInputValue('form-aprendizado-sanidade-input'))
+                    character.sanidade = parseInt(fields.getTextInputValue('form-sanidade-input'))
 
                     updateCharacter(characterId, character)
 
@@ -342,6 +357,25 @@ export default new Command({
                     modalInteraction.reply({ embeds: [embed] })
                 } catch (error) {
                     console.log(`Um erro ocorreu em form-pt3-edit: ${error}`)
+                }
+            },
+        ],[
+            'form-pt4-edit',
+            async (modalInteraction) => {
+                try {
+                    const { fields } = modalInteraction
+                    const characterId = await getEditCharacterId(modalInteraction.user.id)
+
+                    let character: Character = await getCharacter(characterId)
+
+                    character.fama = parseInt(fields.getTextInputValue('form-fama-input'))
+
+                    updateCharacter(characterId, character)
+
+                    const embed = await buildFichaEmbed(characterId)
+                    modalInteraction.reply({ embeds: [embed] })
+                } catch (error) {
+                    console.log(`Um erro ocorreu em form-pt4-edit: ${error}`)
                 }
             },
         ],

@@ -26,7 +26,7 @@ export async function buildFichaEmbed(characterId: string) {
     const character: Character = await getCharacter(characterId)
 
     return new EmbedBuilder()
-        .setTitle(`${character?.name}   ${character?.fama} 🌟 `)
+        .setTitle(`${character?.name}   🌟:${character?.fama}  `)
         .setDescription(
             `
 **PS:** ${character?.sanidade} 🧠    **PV:** ${character?.pv}/${character?.maxPv} ${getHealthEmoji(character?.pv, character?.maxPv)} 
