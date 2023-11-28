@@ -40,8 +40,8 @@ export function formatAtt(att: string) {
             return 'Manha'
         case 'ardil':
             return 'Ardil'
-        case 'humanidade':
-            return 'Humanidade'
+        case 'sanidade':
+            return 'Sanidade'
     }
 }
 

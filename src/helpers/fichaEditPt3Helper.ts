@@ -5,13 +5,13 @@ import { getCharacter } from './dbService'
 export async function buildFichaEditPt3Modal(characterId: string) {
     const character: Character = await getCharacter(characterId)
 
-    const humanidade = new ActionRowBuilder<TextInputBuilder>({
+    const sanidade = new ActionRowBuilder<TextInputBuilder>({
         components: [
             new TextInputBuilder({
-                custom_id: 'form-aprendizado-humanidade-input',
-                label: 'Humanidade:',
-                value: character?.humanidade ? character?.humanidade.toString() : undefined,
-                placeholder: 'Edite a Humanidade',
+                custom_id: 'form-aprendizado-sanidade-input',
+                label: 'Sanidade:',
+                value: character?.sanidade ? character?.sanidade.toString() : undefined,
+                placeholder: 'Edite a Sanidade',
                 style: TextInputStyle.Short,
                 maxLength: 2,
                 required: false,
@@ -77,7 +77,7 @@ export async function buildFichaEditPt3Modal(characterId: string) {
 
     return new ModalBuilder({
         custom_id: 'form-pt3-edit',
-        title: 'Edite o aprendizado e a humanidade',
-        components: [forca, astucia, manha, ardil, humanidade],
+        title: 'Edite o aprendizado e a sanidade',
+        components: [forca, astucia, manha, ardil, sanidade],
     })
 }

@@ -64,7 +64,7 @@ export default new Command({
                 {
                     name: 'pt3',
                     type: ApplicationCommandOptionType.Subcommand,
-                    description: 'Comando restrito a DMs editar aprendizados e humanidade',
+                    description: 'Comando restrito a DMs editar aprendizados e sanidade',
                     options: [
                         {
                             name: 'usuario',
@@ -104,6 +104,24 @@ export default new Command({
                     name: 'perolas',
                     type: ApplicationCommandOptionType.Subcommand,
                     description: 'Comando restrito a DMs para adicionr ou remove pérolas de uma ficha',
+                    options: [
+                        {
+                            name: 'usuario',
+                            description: 'Usuario a ser editado',
+                            type: ApplicationCommandOptionType.User,
+                            required: true,
+                        },
+                        {
+                            name: 'quantidade',
+                            description: 'Quantidade à adicionar ou subtrair',
+                            type: ApplicationCommandOptionType.Number,
+                            required: true,
+                        },
+                    ],
+                },{
+                    name: 'fama',
+                    type: ApplicationCommandOptionType.Subcommand,
+                    description: 'Comando restrito a DMs para adicionar ou remove fama de uma ficha',
                     options: [
                         {
                             name: 'usuario',
@@ -174,6 +192,7 @@ export default new Command({
 
                 if (options.getSubcommand() === 'moeda') character.moeda += quantidade
                 if (options.getSubcommand() === 'perolas') character.perolas += quantidade
+                if (options.getSubcommand() === 'fama') character.fama += quantidade
 
                 updateCharacter(characterId, character)
                 const reply =
@@ -315,7 +334,7 @@ export default new Command({
                     character.aprendizados.astucia = parseInt(fields.getTextInputValue('form-aprendizado-astucia-input'))
                     character.aprendizados.manha = parseInt(fields.getTextInputValue('form-aprendizado-manha-input'))
                     character.aprendizados.ardil = parseInt(fields.getTextInputValue('form-aprendizado-ardil-input'))
-                    character.humanidade = parseInt(fields.getTextInputValue('form-aprendizado-humanidade-input'))
+                    character.sanidade = parseInt(fields.getTextInputValue('form-aprendizado-sanidade-input'))
 
                     updateCharacter(characterId, character)
 

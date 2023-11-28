@@ -12,7 +12,7 @@ import {
     buildLvlUpEmbed,
     buildRequestAttEmbed,
     updateAprendizados,
-    updateHumanidade,
+    updateSanidade,
 } from '../../helpers/fichaHelper'
 import { formatResult, rollD20 } from '../../helpers/formatters'
 import { Character } from '../../structs/types/Character'
@@ -159,8 +159,8 @@ export default new Command({
 
                         checkEmbed = await buildCheckEmbed(result, character, rolagem, attValue, modValue)
                         if (result.includes('FALHA')) {
-                            if (character?.selectedAtt === 'humanidade') {
-                                await updateHumanidade(characterId)
+                            if (character?.selectedAtt === 'sanidade') {
+                                await updateSanidade(characterId)
                                 humanityLoss = true
                             } else {
                                 levelUP = await updateAprendizados(characterId)
