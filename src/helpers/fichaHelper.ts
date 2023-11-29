@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ColorResolvable, EmbedBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { Character } from '../structs/types/Character'
 import { getCharacter, updateCharacter } from './dbService'
-import { formatAprendizados, formatAtt, getColor, getHealthEmoji, rollD20 } from './formatters'
+import { formatAprendizados, formatAtt, formatEstrelas, formatFama, getColor, getHealthEmoji, rollD20 } from './formatters'
 
 export async function buildFichaCreationEmbed() {
     return new EmbedBuilder().setTitle('Criar ficha.').setDescription('Você ainda não tem uma ficha criada, gostaria de criar?')
@@ -26,18 +26,24 @@ export async function buildFichaEmbed(characterId: string) {
     const character: Character = await getCharacter(characterId)
 
     return new EmbedBuilder()
-        .setTitle(`${character?.name}   🌟:${character?.fama}  `)
+        .setTitle(`${character?.name}`)
         .setDescription(
             `
-**PS:** ${character?.sanidade} 🧠    **PV:** ${character?.pv}/${character?.maxPv} ${getHealthEmoji(character?.pv, character?.maxPv)} 
+**PS:** ${character?.sanidade} 🧠    **PV:** ${character?.pv}/${character?.maxPv} ${getHealthEmoji(character?.pv, character?.maxPv)}
+
 
 ${formatAprendizados(character?.aprendizados.forca)} | **Força:** ${character?.forca} 
 ${formatAprendizados(character?.aprendizados.astucia)} | **Astúcia:** ${character?.astucia}  
 ${formatAprendizados(character?.aprendizados.manha)} | **Manha:** ${character?.manha}  
 ${formatAprendizados(character?.aprendizados.ardil)} | **Ardil:** ${character?.ardil}
-\u200B
+
+
 **Moeda🪙:  ${character?.moeda}€$**
 **Pérolas🔮:  ${character?.perolas} CryPe**
+
+\u200B
+**Fama do grupo: ** ${formatEstrelas(character?.fama)}
+${formatFama(character?.fama)}
 `
         )
         .setColor(character?.color as ColorResolvable)

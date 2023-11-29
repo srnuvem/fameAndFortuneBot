@@ -1,8 +1,29 @@
-import { QuickDB } from 'quick.db'
-import { Character } from '../structs/types/Character'
-import { Campaign } from '../structs/types/Campaign'
+import { QuickDB } from 'quick.db';
+import { Campaign } from '../structs/types/Campaign';
+import { Character } from '../structs/types/Character';
 
 const db = new QuickDB()
+
+
+export async function updateDefaultCampaign() {
+    // Chave e valor fornecidos
+    const chave = 'campaign/1059652181743124480-1095393697023152158';
+    const valor = {
+        "textChannelId": "1063919333258035350",
+        "voiceChannelId": "1059652181743124485",
+        "categoryId": "1095393697023152158",
+        "name": "WonderCity",
+        "channelId": "",
+        "guildId": "1059652181743124480",
+        "moeda": "EuroDollar",
+        "perola": "CryptoPerolas",
+        "color": "Blue",
+        "thumbURL": "https://i.ibb.co/WKzbDNc/user.png"
+    };
+
+    // Adicionando a chave e o valor ao banco de dados
+    await db.set(chave, valor);
+}
 
 export async function setEditCharacterId(userId: string, characterId: string) {
     await db.set('editCharacter/' + userId, characterId)
