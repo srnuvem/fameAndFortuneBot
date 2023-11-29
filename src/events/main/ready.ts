@@ -23,7 +23,7 @@ export default new Event({
 
         setInterval(async () => {
             const entries = await db.all()
-            updateDefaultCampaign()
+            // updateDefaultCampaign()
             const characterEntries = entries.filter((entry) => entry.id.includes('character'))
 
             characterEntries.forEach(async (char) => {

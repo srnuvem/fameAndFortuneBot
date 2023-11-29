@@ -18,7 +18,8 @@ export async function updateDefaultCampaign() {
         "moeda": "EuroDollar",
         "perola": "CryptoPerolas",
         "color": "Blue",
-        "thumbURL": "https://i.ibb.co/WKzbDNc/user.png"
+        "thumbURL": "https://media.discordapp.net/attachments/1099227289562124308/1179232939746275378/avatar-820029831.jpg",
+        "fama": "1"
     };
 
     // Adicionando a chave e o valor ao banco de dados
@@ -30,7 +31,8 @@ export async function setEditCharacterId(userId: string, characterId: string) {
 }
 
 export async function getEditCharacterId(userId: string): Promise<string> {
-    return (await db.get('editCharacter/' + userId)) as string
+    const editCharacterId = await db.get('editCharacter/' + userId) as string
+    return editCharacterId
 }
 
 export async function setEditCampaignId(userId: string, campaingId: string) {
@@ -38,7 +40,8 @@ export async function setEditCampaignId(userId: string, campaingId: string) {
 }
 
 export async function getEditCampaignId(userId: string): Promise<string> {
-    return (await db.get('editCampaign/' + userId)) as string
+    const editCampaignId = await db.get('editCampaign/' + userId) as string
+    return editCampaignId
 }
 
 export async function updateCharacter(characterId: string, character: Character) {
@@ -53,7 +56,8 @@ export async function killCharacter(characterId: string) {
 }
 
 export async function getCharacter(characterId: string): Promise<Character> {
-    return (await db.get(characterId)) as Character
+    const character = await db.get(characterId) as Character
+    return character
 }
 
 export function getCharacterId(userId: string, categoryId: string, guildId: string): string {
@@ -66,7 +70,8 @@ export function getCampaignId(categoryId: string, guildId: string): string {
 }
 
 export async function getCampaign(campaignId: string): Promise<Campaign> {
-    return (await db.get(campaignId)) as Campaign
+    const campaign = await db.get(campaignId) as Campaign
+    return campaign
 }
 
 export async function updateCampaign(campaignId: string, campaign: Campaign) {
