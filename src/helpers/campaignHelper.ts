@@ -1,6 +1,7 @@
 import { ActionRowBuilder, ColorResolvable, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js'
 import { Campaign } from '../structs/types/Campaign'
 import { getCampaign } from './dbService'
+import { formatEstrelas } from './formatters'
 
 export function buildDMOnlyCampaingEmbed() {
     return new EmbedBuilder()
@@ -16,7 +17,8 @@ export async function buildcampaignEmbed(campaingId: string) {
         .setTitle(`${campaign?.name}`)
         .setDescription(`
                 **Moeda🪙:  ${campaign?.moeda}€$**   
-                **Pérola🔮:  ${campaign?.perola}**
+                **Pérola🔮:  ${campaign?.perola}**   
+                **Fama:  ${formatEstrelas(parseInt(campaign?.fama))}**   
         `
         )
         .setColor(campaign?.color as ColorResolvable)
@@ -61,9 +63,36 @@ export async function buildCampaignModal(campaign?: Campaign) {
         ],
     })
 
+    const thumbURL = new ActionRowBuilder<TextInputBuilder>({
+        components: [
+            new TextInputBuilder({
+                custom_id: 'form-campaign-thumbURL-input',
+                label: 'ThumbURL',
+                value: campaign?.thumbURL ? campaign?.thumbURL : undefined,
+                placeholder: 'Cole o link da imagem da sua campanha 🖼️',
+                style: TextInputStyle.Paragraph,
+                required: false,
+            }),
+        ],
+    })
+
+    const fama = new ActionRowBuilder<TextInputBuilder>({
+        components: [
+            new TextInputBuilder({
+                custom_id: 'form-campaign-fama-input',
+                label: 'Fama',
+                value: campaign?.fama ? campaign?.fama : undefined,
+                placeholder: 'Edite a fama aqui ⭐',
+                style: TextInputStyle.Short,
+                max_length: 8,
+                required: false,
+            }),
+        ],
+    })
+
     return new ModalBuilder({
         custom_id: 'form-campaign',
         title: campaign ? 'Edite sua campanha' : 'Crie sua campanha',
-        components: [name, moeda, perola],
+        components: [name, moeda, perola, thumbURL, fama],
     })
 }

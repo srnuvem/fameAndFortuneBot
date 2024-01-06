@@ -4,6 +4,7 @@ import { client } from '../..'
 import { buildFichaEmbed } from '../../helpers/fichaHelper'
 import { Character } from '../../structs/types/Character'
 import { Event } from '../../structs/types/Event'
+import { updateDefaultCampaign } from '../../helpers/dbService'
 const db = new QuickDB()
 
 export default new Event({
@@ -22,6 +23,7 @@ export default new Event({
 
         setInterval(async () => {
             const entries = await db.all()
+            // updateDefaultCampaign()
             const characterEntries = entries.filter((entry) => entry.id.includes('character'))
 
             characterEntries.forEach(async (char) => {
@@ -31,7 +33,7 @@ export default new Event({
                 let channelN = guild?.channels.cache.find(
                     (c) => c.type === ChannelType.GuildText && c?.parentId === channel?.parentId && c.name.includes('narradora')
                 ) as TextChannel
-
+                    
                 const embed = await buildFichaEmbed(character.characterId)
 
                 try {

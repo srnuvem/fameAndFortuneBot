@@ -40,8 +40,8 @@ export function formatAtt(att: string) {
             return 'Manha'
         case 'ardil':
             return 'Ardil'
-        case 'humanidade':
-            return 'Humanidade'
+        case 'sanidade':
+            return 'Sanidade'
     }
 }
 
@@ -79,6 +79,40 @@ export function formatAprendizados(aprendizados: number): string {
         aprendizados--
     }
     return formattedApprendizados
+}
+
+export function formatEstrelas(fama: number): string {
+    let formattedFama = ''
+
+    for (let i = 0; i < 5; i++) {
+        if (fama > 0) {
+            formattedFama += '🌟'
+        } else {
+            formattedFama += '🔸'
+        }
+        fama--
+    }
+    return formattedFama
+}
+
+export function formatFama(fama: number): string {
+    let formattedFama = ''
+
+    switch (fama) {
+        case 0:
+            return 'Ninguem'
+        case 1:
+            return 'Conhecidos do Bairro'
+        case 2:
+            return 'Conhecidos da cidade'
+        case 3:
+            return 'Lendas da cidade'
+        case 4:
+            return 'Famosos mundiais'
+        case 5:
+            return 'Lendas Mundiais'
+    }
+    return formattedFama
 }
 
 export function formatChannelName(characterName: string) {

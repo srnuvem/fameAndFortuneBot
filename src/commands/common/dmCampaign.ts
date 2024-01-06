@@ -17,7 +17,7 @@ import { Campaign, CampaignClass } from '../../structs/types/Campaign'
 import { Command } from '../../structs/types/Command'
 
 export default new Command({
-    name: 'z-campanha',
+    name: 'z-narradora-campanha',
     description: 'Cria ou edita uma campanha',
     type: ApplicationCommandType.ChatInput,
     options: [
@@ -55,7 +55,7 @@ export default new Command({
             }
 
             if (options.getSubcommand() === 'editar') {
-                const campaign: Campaign = await getCampaign(getCampaignId(guildId, categoryId))
+                const campaign: Campaign = await getCampaign(campaignId)
                 let modal = await buildCampaignModal(campaign)
 
                 await setEditCampaignId(interaction.user.id, campaignId)
@@ -156,6 +156,8 @@ export default new Command({
                     campaign.name = fields.getTextInputValue('form-campaign-name-input')
                     campaign.moeda = fields.getTextInputValue('form-campaign-moeda-input')
                     campaign.perola = fields.getTextInputValue('form-campaign-perola-input')
+                    campaign.thumbURL = fields.getTextInputValue('form-campaign-thumbURL-input')
+                    campaign.fama = fields.getTextInputValue('form-campaign-fama-input')
 
                     let channel = guild?.channels.cache.find((c) => c.id === campaign.textChannelId) as TextChannel
 

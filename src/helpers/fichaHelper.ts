@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ColorResolvable, EmbedBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { Character } from '../structs/types/Character'
 import { getCharacter, updateCharacter } from './dbService'
-import { formatAprendizados, formatAtt, getColor, getHealthEmoji, rollD20 } from './formatters'
+import { formatAprendizados, formatAtt, formatEstrelas, formatFama, getColor, getHealthEmoji, rollD20 } from './formatters'
 
 export async function buildFichaCreationEmbed() {
     return new EmbedBuilder().setTitle('Criar ficha.').setDescription('Você ainda não tem uma ficha criada, gostaria de criar?')
@@ -22,24 +22,29 @@ export async function buildFichaCreationComponents() {
 }
 
 export async function buildFichaEmbed(characterId: string) {
+
     const character: Character = await getCharacter(characterId)
 
     return new EmbedBuilder()
         .setTitle(`${character?.name}`)
         .setDescription(
             `
-        **Humanidade:** ${character?.humanidade}     **PV:** ${character?.pv}/${character?.maxPv} ${getHealthEmoji(
-                character?.pv,
-                character?.maxPv
-            )}
-        
-        ${formatAprendizados(character?.aprendizados.forca)} | **Força:** ${character?.forca} 
-        ${formatAprendizados(character?.aprendizados.astucia)} | **Astúcia:** ${character?.astucia}  
-        ${formatAprendizados(character?.aprendizados.manha)} | **Manha:** ${character?.manha}  
-        ${formatAprendizados(character?.aprendizados.ardil)} | **Ardil:** ${character?.ardil}
-        \u200B
-        **Moeda🪙:  ${character?.moeda}€$**   **Pérolas🔮:  ${character?.perolas} CryPe**
-        `
+**PS:** ${character?.sanidade} 🧠    **PV:** ${character?.pv}/${character?.maxPv} ${getHealthEmoji(character?.pv, character?.maxPv)}
+
+
+${formatAprendizados(character?.aprendizados.forca)} | **Força:** ${character?.forca} 
+${formatAprendizados(character?.aprendizados.astucia)} | **Astúcia:** ${character?.astucia}  
+${formatAprendizados(character?.aprendizados.manha)} | **Manha:** ${character?.manha}  
+${formatAprendizados(character?.aprendizados.ardil)} | **Ardil:** ${character?.ardil}
+
+
+**Moeda🪙:  ${character?.moeda}€$**
+**Pérolas🔮:  ${character?.perolas} CryPe**
+
+\u200B
+**Fama do grupo: ** ${formatEstrelas(character?.fama)}
+${formatFama(character?.fama)}
+`
         )
         .setColor(character?.color as ColorResolvable)
         .setThumbnail(character?.thumbURL)
@@ -73,9 +78,9 @@ export function buildFichaComponents() {
                         description: 'Carisma, Lábia.',
                     },
                     {
-                        label: 'Humanidade',
-                        value: 'humanidade',
-                        description: 'Humanidade, Sanidade.',
+                        label: 'Sanidade',
+                        value: 'sanidade',
+                        description: 'Sanidade, Sanidade.',
                     },
                 ],
             }),
@@ -186,9 +191,9 @@ export async function updateAprendizados(characterId: string) {
 
     return levelUP
 }
-export async function updateHumanidade(characterId: string) {
+export async function updateSanidade(characterId: string) {
     let character: Character = await getCharacter(characterId)
-    character.humanidade -= 1
+    character.sanidade -= 1
     await updateCharacter(characterId, character)
 }
 
@@ -205,10 +210,10 @@ export async function buildLvlUpEmbed(character: Character) {
 
 export async function buildHumanityLostEmbed(character: Character) {
     return new EmbedBuilder()
-        .setTitle(`${character?.name} perdeu 1 ponto em Humanidade  💀`)
+        .setTitle(`${character?.name} perdeu 1 ponto em Sanidade  💀`)
         .setDescription(
             `Os esforços de ${character?.name} estão cobrando um preço alto! 
-            Você perdeu 1 ponto de Humanidade`
+            Você perdeu 1 ponto de Sanidade`
         )
         .setThumbnail(character?.thumbURL)
         .setFooter({ text: 'Cuidado! 💀' })
