@@ -1,8 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ColorResolvable, EmbedBuilder, StringSelectMenuBuilder } from 'discord.js'
+import { Campaign } from '../structs/types/Campaign'
 import { Character } from '../structs/types/Character'
 import { getCampaign, getCharacter, updateCharacter } from './dbService'
-import { formatAprendizados, formatAtt, formatEstrelas, formatFama, getColor, getHealthEmoji, getHealthMod, rollD20 } from './formatters'
-import { Campaign } from '../structs/types/Campaign'
+import { formatAprendizados, formatAtt, getColor, getHealthEmoji, rollD20 } from './formatters'
 
 export async function buildFichaCreationEmbed() {
     return new EmbedBuilder().setTitle('Criar ficha.').setDescription('Você ainda não tem uma ficha criada, gostaria de criar?')
@@ -127,6 +127,11 @@ export function buildFichaComponents() {
     return [rowAttributes, rowMod, rowButtons]
 }
 
+export function getHealthMod(character: Character) {
+
+    return character?.pv >= character?.maxPv ? 0 : (character?.pv - character?.maxPv) / character?.forca | 0
+}
+
 export async function buildAtaqueEmbed(characterId: string) {
     const character: Character = await getCharacter(characterId)
 
@@ -141,8 +146,8 @@ export async function buildAtaqueEmbed(characterId: string) {
         .setDescription(
             `
         ${formatAtt(character?.selectedAtt)}: ${attValue}
-        Modificador: ${modValue > 0 ? "+"+modValue : modValue }
-        Saúde: ${damModValue > 0 ? "+"+damModValue : damModValue }
+        Modificador: ${modValue > 0 ? "+" + modValue : modValue}
+        Saúde: ${damModValue > 0 ? "+" + damModValue : damModValue}
         Rolagem: **${rolagem}**
          
         Ataque total: **${total}**`
@@ -157,8 +162,8 @@ export async function buildCheckEmbed(checkResult: string, character: Character,
         .setDescription(
             `
                 ${formatAtt(character?.selectedAtt)}: ${attValue}
-                Modificador: ${character?.selectedMod > 0 ? "+"+character?.selectedMod : character?.selectedMod }
-                Saúde: ${damModValue > 0 ? "+"+damModValue : damModValue }
+                Modificador: ${character?.selectedMod > 0 ? "+" + character?.selectedMod : character?.selectedMod}
+                Saúde: ${damModValue > 0 ? "+" + damModValue : damModValue}
                 Dificuldade total: **${attValue + modValue}**
                  
                 Rolagem: **${rolagem}**`

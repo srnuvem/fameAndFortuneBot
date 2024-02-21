@@ -16,10 +16,6 @@ export function getCheckResult(roll: number, attValue: number, modValue: number,
 
     return roll <= attValue + modValue + damModValue? 'SUCESSO' : 'FALHA'
 }
-export function getHealthMod(character: Character) {
-
-    return character?.pv >= character?.maxPv ? 0 : (character?.pv-character?.maxPv) / character?.forca | 0
-}
 
 export function getColor(result: string) {
     switch (result) {

@@ -11,10 +11,11 @@ import {
     buildHumanityLostEmbed,
     buildLvlUpEmbed,
     buildRequestAttEmbed,
+    getHealthMod,
     updateAprendizados,
     updateSanidade,
 } from '../../helpers/fichaHelper'
-import { getCheckResult, getHealthMod, rollD20 } from '../../helpers/formatters'
+import { getCheckResult, rollD20 } from '../../helpers/formatters'
 import { Character } from '../../structs/types/Character'
 import { Command } from '../../structs/types/Command'
 
