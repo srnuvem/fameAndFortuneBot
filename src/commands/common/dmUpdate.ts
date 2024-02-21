@@ -10,6 +10,8 @@ import {
     TextChannel,
 } from 'discord.js'
 import {
+    getCampaign,
+    getCampaignId,
     getCharacter,
     getCharacterId,
     getEditCharacterId,
@@ -23,6 +25,7 @@ import { buildFichaEditPt3Modal } from '../../helpers/fichaEditPt3Helper'
 import { buildFichaEditPt4Modal } from '../../helpers/fichaEditPt4Helper'
 import { buildDMOnlyEmbed, buildFichaEmbed } from '../../helpers/fichaHelper'
 import { formatChannelName } from '../../helpers/formatters'
+import { Campaign } from '../../structs/types/Campaign'
 import { Character, CharacterClass } from '../../structs/types/Character'
 import { Command } from '../../structs/types/Command'
 
@@ -132,7 +135,7 @@ export default new Command({
                             required: true,
                         },
                     ],
-                },{
+                }, {
                     name: 'fama',
                     type: ApplicationCommandOptionType.Subcommand,
                     description: 'Comando restrito a DMs para adicionar ou remove fama de uma ficha',
@@ -178,20 +181,20 @@ export default new Command({
         try {
             const dmRole = interaction?.guild?.roles?.cache.find((role) => role.name === 'DM') as Role
             const member = interaction?.guild?.members.cache.get(interaction.user.id) as GuildMember
-            
+
             const userId = options.getUser('usuario', true).id
             const channel = interaction.channel as TextChannel
             const categoryId = channel.parent?.id as string
             const guildId = interaction?.guild?.id as string
-            
+
             const characterId = getCharacterId(userId, categoryId, guildId)
             const character = await getCharacter(characterId)
-            
+
             if (!member.roles.cache.has(dmRole.id)) {
-                interaction.reply({embeds:[buildDMOnlyEmbed(character)], ephemeral: true})
+                interaction.reply({ embeds: [buildDMOnlyEmbed(character)], ephemeral: true })
                 return
             }
-            
+
             if (options.getSubcommandGroup() === 'update') {
                 let modal = await buildFichaEditPt1Modal(characterId)
 
@@ -256,6 +259,9 @@ export default new Command({
                     const category = guild?.channels.cache.get(categoryId) as CategoryChannel
                     const channelName = formatChannelName(`ficha-${fields.getTextInputValue('form-ficha-name-input')}`)
                     let channel = guild?.channels.cache.find((c) => c.name === channelName) as TextChannel
+                    const guildId = guild?.id as string
+
+                    const campaign: Campaign = await getCampaign(getCampaignId(categoryId, guildId))
 
                     const newCharacter = !character
                     if (newCharacter) character = new CharacterClass()
@@ -269,7 +275,7 @@ export default new Command({
                     character.astucia = parseInt(fields.getTextInputValue('form-ficha-astucia-input'))
                     character.manha = parseInt(fields.getTextInputValue('form-ficha-manha-input'))
                     character.ardil = parseInt(fields.getTextInputValue('form-ficha-ardil-input'))
-                    character.maxPv = character?.forca * 5
+                    character.maxPv = character?.forca * parseInt(campaign?.multiSaude)
                     character.pv = character?.maxPv
                     character.guildId = guild?.id as string
 
@@ -359,7 +365,7 @@ export default new Command({
                     console.log(`Um erro ocorreu em form-pt3-edit: ${error}`)
                 }
             },
-        ],[
+        ], [
             'form-pt4-edit',
             async (modalInteraction) => {
                 try {

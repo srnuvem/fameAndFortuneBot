@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ColorResolvable, EmbedBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { Character } from '../structs/types/Character'
-import { getCharacter, updateCharacter } from './dbService'
+import { getCampaign, getCharacter, updateCharacter } from './dbService'
 import { formatAprendizados, formatAtt, formatEstrelas, formatFama, getColor, getHealthEmoji, rollD20 } from './formatters'
 
 export async function buildFichaCreationEmbed() {
@@ -40,10 +40,6 @@ ${formatAprendizados(character?.aprendizados.ardil)} | **Ardil:** ${characte
 
 **Moeda🪙:  ${character?.moeda}€$**
 **Pérolas🔮:  ${character?.perolas} CryPe**
-
-\u200B
-**Fama do grupo: ** ${formatEstrelas(character?.fama)}
-${formatFama(character?.fama)}
 `
         )
         .setColor(character?.color as ColorResolvable)
@@ -135,36 +131,40 @@ export async function buildAtaqueEmbed(characterId: string) {
     const rolagem = rollD20()
     const attValue = character?.selectedAtt ? character[character?.selectedAtt] : 0
     const modValue = character?.selectedMod | 0
-    const total = rolagem + modValue + attValue
+    const damModValue = character?.pv >= character?.maxPv ? 0 : (character?.pv-character?.maxPv) / character?.forca
+    const total = rolagem + modValue + attValue + damModValue
 
     return new EmbedBuilder()
         .setTitle(`${character?.name} atacou! ${formatAtt(character?.selectedAtt)}: ${total}`)
         .setDescription(
             `
         ${formatAtt(character?.selectedAtt)}: ${attValue}
-        Modificador: ${modValue}
-        Rolagem: ${rolagem}
+        Modificador: ${modValue > 0 ? "+"+modValue : modValue }
+        Saúde: ${damModValue > 0 ? "+"+damModValue : damModValue }
+        Rolagem: **${rolagem}**
+         
         Ataque total: **${total}**`
         )
         .setColor('White')
         .setThumbnail(character?.thumbURL)
 }
 
-export async function buildCheckEmbed(result: string, character: Character, rolagem: number, attValue: number, modValue: number) {
+export async function buildCheckEmbed(checkResult: string, character: Character, rolagem: number, attValue: number, modValue: number, damModValue: number) {
     return new EmbedBuilder()
-        .setTitle(`${result} ${character?.name} 🎲:${rolagem}`)
+        .setTitle(`${checkResult} ${character?.name} 🎲:${rolagem}`)
         .setDescription(
             `
                 ${formatAtt(character?.selectedAtt)}: ${attValue}
-                Modificador: ${character?.selectedMod}
+                Modificador: ${character?.selectedMod > 0 ? "+"+character?.selectedMod : character?.selectedMod }
+                Saúde: ${damModValue > 0 ? "+"+damModValue : damModValue }
                 Dificuldade total: **${attValue + modValue}**
                  
                 Rolagem: **${rolagem}**`
         )
-        .setColor(getColor(result) as ColorResolvable)
+        .setColor(getColor(checkResult) as ColorResolvable)
         .setThumbnail(character?.thumbURL)
         .setFooter({
-            text: result.includes('FALHA')
+            text: checkResult.includes('FALHA')
                 ? `Mas você aprendeu com isso. +1 de aprendizado em ${formatAtt(character?.selectedAtt)} 🎉`
                 : 'Sucesso! 🎉',
         })
@@ -172,6 +172,7 @@ export async function buildCheckEmbed(result: string, character: Character, rola
 
 export async function updateAprendizados(characterId: string) {
     let character: Character = await getCharacter(characterId)
+    const campaign = await getCampaign(character.campaignId)
 
     const levelUP = character?.aprendizados[character?.selectedAtt] >= 4
     if (levelUP) {
@@ -179,10 +180,10 @@ export async function updateAprendizados(characterId: string) {
         character[character?.selectedAtt] += 1
         if (character?.selectedAtt === 'forca') {
             if (character.pv === character.maxPv) {
-                character.maxPv = character.forca * 5
+                character.maxPv = character.forca * parseInt(campaign.multiSaude)
                 character.pv = character.maxPv
             }
-            character.maxPv = character.forca * 5
+            character.maxPv = character.forca * parseInt(campaign.multiSaude)
         }
     } else {
         character.aprendizados[character?.selectedAtt] += 1

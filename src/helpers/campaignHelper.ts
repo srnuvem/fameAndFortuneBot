@@ -18,7 +18,6 @@ export async function buildcampaignEmbed(campaingId: string) {
         .setDescription(`
                 **Moeda🪙:  ${campaign?.moeda}€$**   
                 **Pérola🔮:  ${campaign?.perola}**   
-                **Fama:  ${formatEstrelas(parseInt(campaign?.fama))}**   
         `
         )
         .setColor(campaign?.color as ColorResolvable)
@@ -76,15 +75,15 @@ export async function buildCampaignModal(campaign?: Campaign) {
         ],
     })
 
-    const fama = new ActionRowBuilder<TextInputBuilder>({
+    const multiSaude = new ActionRowBuilder<TextInputBuilder>({
         components: [
             new TextInputBuilder({
-                custom_id: 'form-campaign-fama-input',
-                label: 'Fama',
-                value: campaign?.fama ? campaign?.fama : undefined,
-                placeholder: 'Edite a fama aqui ⭐',
+                custom_id: 'form-campaign-multi-saude-input',
+                label: 'Multiplicador Saude',
+                value: campaign?.multiSaude ? campaign?.multiSaude : undefined,
+                placeholder: 'Edite o Multiplicador de saude ❤️',
                 style: TextInputStyle.Short,
-                max_length: 8,
+                max_length: 2,
                 required: false,
             }),
         ],
@@ -93,6 +92,6 @@ export async function buildCampaignModal(campaign?: Campaign) {
     return new ModalBuilder({
         custom_id: 'form-campaign',
         title: campaign ? 'Edite sua campanha' : 'Crie sua campanha',
-        components: [name, moeda, perola, thumbURL, fama],
+        components: [name, moeda, perola, thumbURL, multiSaude],
     })
 }

@@ -14,7 +14,7 @@ import {
     updateAprendizados,
     updateSanidade,
 } from '../../helpers/fichaHelper'
-import { formatResult, rollD20 } from '../../helpers/formatters'
+import { getCheckResult, rollD20 } from '../../helpers/formatters'
 import { Character } from '../../structs/types/Character'
 import { Command } from '../../structs/types/Command'
 
@@ -155,10 +155,11 @@ export default new Command({
                         const rolagem = rollD20()
                         const attValue = character?.selectedAtt ? character[character?.selectedAtt] : 0
                         const modValue = character?.selectedMod | 0
-                        const result = formatResult(rolagem, attValue, modValue)
+                        const damModValue = character?.pv >= character?.maxPv ? 0 : (character?.pv-character?.maxPv) / character?.forca
+                        const checkResult = getCheckResult(rolagem, attValue, modValue, damModValue)
 
-                        checkEmbed = await buildCheckEmbed(result, character, rolagem, attValue, modValue)
-                        if (result.includes('FALHA')) {
+                        checkEmbed = await buildCheckEmbed(checkResult, character, rolagem, attValue, modValue, damModValue)
+                        if (checkResult.includes('FALHA')) {
                             if (character?.selectedAtt === 'sanidade') {
                                 await updateSanidade(characterId)
                                 humanityLoss = true

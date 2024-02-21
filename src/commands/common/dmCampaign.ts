@@ -40,27 +40,20 @@ export default new Command({
             const categoryId = channel.parent?.id as string
             const guildId = interaction?.guild?.id as string
 
-            const campaignId = getCampaignId(categoryId, guildId)
+            const campaignId = getCampaignId(categoryId, guildId) 
+            const campaign: Campaign = await getCampaign(campaignId)
 
             if (!member.roles.cache.has(dmRole.id)) {
                 interaction.reply({ embeds: [buildDMOnlyCampaingEmbed()], ephemeral: true })
                 return
             }
 
-            if (options.getSubcommand() === 'criar') {
-                let modal = await buildCampaignModal()
+            let modal = await buildCampaignModal(campaign)
 
-                await setEditCampaignId(interaction.user.id, '')
-                interaction.showModal(modal)
-            }
+            await setEditCampaignId(interaction.user.id, campaignId)
+            interaction.showModal(modal)
 
-            if (options.getSubcommand() === 'editar') {
-                const campaign: Campaign = await getCampaign(campaignId)
-                let modal = await buildCampaignModal(campaign)
 
-                await setEditCampaignId(interaction.user.id, campaignId)
-                interaction.showModal(modal)
-            }
         } catch (error) {
             console.log(`Um erro ocorreu em z-campaign: ${error}`)
         }
@@ -76,9 +69,8 @@ export default new Command({
                     let campaign: Campaign = await getCampaign(campaingId)
 
                     const guild = modalInteraction.guild
-
                     //If creating campaing
-                    if (campaingId === '') {
+                    if (!campaign) {
                         campaign = new CampaignClass()
 
                         campaign.name = fields.getTextInputValue('form-campaign-name-input')
@@ -157,7 +149,7 @@ export default new Command({
                     campaign.moeda = fields.getTextInputValue('form-campaign-moeda-input')
                     campaign.perola = fields.getTextInputValue('form-campaign-perola-input')
                     campaign.thumbURL = fields.getTextInputValue('form-campaign-thumbURL-input')
-                    campaign.fama = fields.getTextInputValue('form-campaign-fama-input')
+                    campaign.multiSaude = fields.getTextInputValue('form-campaign-multi-saude-input')
 
                     let channel = guild?.channels.cache.find((c) => c.id === campaign.textChannelId) as TextChannel
 
