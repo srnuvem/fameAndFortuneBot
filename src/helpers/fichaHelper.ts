@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ColorResolvable, EmbedBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { Character } from '../structs/types/Character'
 import { getCampaign, getCharacter, updateCharacter } from './dbService'
-import { formatAprendizados, formatAtt, formatEstrelas, formatFama, getColor, getHealthEmoji, rollD20 } from './formatters'
+import { formatAprendizados, formatAtt, formatEstrelas, formatFama, getColor, getHealthEmoji, getHealthMod, rollD20 } from './formatters'
 import { Campaign } from '../structs/types/Campaign'
 
 export async function buildFichaCreationEmbed() {
@@ -133,7 +133,7 @@ export async function buildAtaqueEmbed(characterId: string) {
     const rolagem = rollD20()
     const attValue = character?.selectedAtt ? character[character?.selectedAtt] : 0
     const modValue = character?.selectedMod | 0
-    const damModValue = character?.pv >= character?.maxPv ? 0 : (character?.pv-character?.maxPv) / character?.forca
+    const damModValue = getHealthMod(character)
     const total = rolagem + modValue + attValue + damModValue
 
     return new EmbedBuilder()

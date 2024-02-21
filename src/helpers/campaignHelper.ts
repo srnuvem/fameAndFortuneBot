@@ -67,7 +67,7 @@ export async function buildCampaignModal(campaign?: Campaign) {
             new TextInputBuilder({
                 custom_id: 'form-campaign-thumbURL-input',
                 label: 'ThumbURL',
-                value: campaign?.thumbURL ? campaign?.thumbURL : undefined,
+                value: campaign?.thumbURL ? campaign?.thumbURL : "https://cdn.pixabay.com/photo/2017/08/31/04/01/d20-2699387_960_720.png",
                 placeholder: 'Cole o link da imagem da sua campanha 🖼️',
                 style: TextInputStyle.Paragraph,
                 required: false,

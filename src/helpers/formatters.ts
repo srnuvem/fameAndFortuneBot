@@ -1,3 +1,5 @@
+import { Character } from "../structs/types/Character"
+
 export function rollD20() {
     const min = 1
     const max = 20
@@ -13,6 +15,10 @@ export function getCheckResult(roll: number, attValue: number, modValue: number,
     }
 
     return roll <= attValue + modValue + damModValue? 'SUCESSO' : 'FALHA'
+}
+export function getHealthMod(character: Character) {
+
+    return character?.pv >= character?.maxPv ? 1 : (character?.pv-character?.maxPv) / character?.forca - 1 | 0
 }
 
 export function getColor(result: string) {

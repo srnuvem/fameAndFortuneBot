@@ -14,7 +14,7 @@ import {
     updateAprendizados,
     updateSanidade,
 } from '../../helpers/fichaHelper'
-import { getCheckResult, rollD20 } from '../../helpers/formatters'
+import { getCheckResult, getHealthMod, rollD20 } from '../../helpers/formatters'
 import { Character } from '../../structs/types/Character'
 import { Command } from '../../structs/types/Command'
 
@@ -155,7 +155,7 @@ export default new Command({
                         const rolagem = rollD20()
                         const attValue = character?.selectedAtt ? character[character?.selectedAtt] : 0
                         const modValue = character?.selectedMod | 0
-                        const damModValue = character?.pv >= character?.maxPv ? 0 : (character?.pv-character?.maxPv) / character?.forca
+                        const damModValue = getHealthMod(character)
                         const checkResult = getCheckResult(rolagem, attValue, modValue, damModValue)
 
                         checkEmbed = await buildCheckEmbed(checkResult, character, rolagem, attValue, modValue, damModValue)
