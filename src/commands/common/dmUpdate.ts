@@ -261,7 +261,8 @@ export default new Command({
                     let channel = guild?.channels.cache.find((c) => c.name === channelName) as TextChannel
                     const guildId = guild?.id as string
 
-                    const campaign: Campaign = await getCampaign(getCampaignId(categoryId, guildId))
+                    const campaignId: string = getCampaignId(categoryId, guildId)
+                    const campaign: Campaign = await getCampaign(campaignId)
 
                     const newCharacter = !character
                     if (newCharacter) character = new CharacterClass()
@@ -278,6 +279,7 @@ export default new Command({
                     character.maxPv = character?.forca * parseInt(campaign?.multiSaude)
                     character.pv = character?.maxPv
                     character.guildId = guild?.id as string
+                    character.campaignId = campaignId
 
                     if (newCharacter && !channel) {
                         channel = (await guild?.channels.create({

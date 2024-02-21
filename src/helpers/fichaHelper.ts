@@ -2,6 +2,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ColorResolvable, EmbedBui
 import { Character } from '../structs/types/Character'
 import { getCampaign, getCharacter, updateCharacter } from './dbService'
 import { formatAprendizados, formatAtt, formatEstrelas, formatFama, getColor, getHealthEmoji, rollD20 } from './formatters'
+import { Campaign } from '../structs/types/Campaign'
 
 export async function buildFichaCreationEmbed() {
     return new EmbedBuilder().setTitle('Criar ficha.').setDescription('Você ainda não tem uma ficha criada, gostaria de criar?')
@@ -24,6 +25,7 @@ export async function buildFichaCreationComponents() {
 export async function buildFichaEmbed(characterId: string) {
 
     const character: Character = await getCharacter(characterId)
+    const campaign: Campaign = await getCampaign(character.campaignId)
 
     return new EmbedBuilder()
         .setTitle(`${character?.name}`)
@@ -38,8 +40,8 @@ ${formatAprendizados(character?.aprendizados.manha)} | **Manha:** ${characte
 ${formatAprendizados(character?.aprendizados.ardil)} | **Ardil:** ${character?.ardil}
 
 
-**Moeda🪙:  ${character?.moeda}€$**
-**Pérolas🔮:  ${character?.perolas} CryPe**
+**${campaign?.moeda}:  ${character?.moeda}🪙**
+**${campaign?.perola}:  ${character?.perolas}🔮**
 `
         )
         .setColor(character?.color as ColorResolvable)
