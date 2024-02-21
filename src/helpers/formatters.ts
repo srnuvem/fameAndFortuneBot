@@ -18,7 +18,7 @@ export function getCheckResult(roll: number, attValue: number, modValue: number,
 }
 export function getHealthMod(character: Character) {
 
-    return character?.pv >= character?.maxPv ? 1 : (character?.pv-character?.maxPv) / character?.forca - 1 | 0
+    return character?.pv >= character?.maxPv ? 0 : (character?.pv-character?.maxPv) / character?.forca - 1 | 0
 }
 
 export function getColor(result: string) {
